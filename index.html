@@ -1183,17 +1183,17 @@ const firebaseConfig = {
 
   // Cadastro
   signupBtn.addEventListener('click', () => {
-    const email = emailInput.value.trim();
-    const password = password.value;
-    if (!email || !password) {
+    const emailValue = emailInput.value.trim(); // Use emailInput
+    const passwordValue = passwordInput.value; // Use passwordInput
+    if (!emailValue || !passwordValue) {
       showError(authError, 'Preencha email e senha');
       return;
     }
-    auth.createUserWithEmailAndPassword(email, password)
+    auth.createUserWithEmailAndPassword(emailValue, passwordValue) // Use emailValue e passwordValue
       .then(cred => {
         // Criar perfil do usuário no Firestore
         return db.collection('users').doc(cred.user.uid).set({
-          email: email,
+          email: emailValue, // Use emailValue
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           followers: [],
           following: [],
