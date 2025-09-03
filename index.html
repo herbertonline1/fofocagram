@@ -44,6 +44,7 @@
     font-size: 2.2rem;
     margin: 0;
     color: #262626;
+    cursor: pointer; /* Adicionado para indicar que é clicável */
   }
   .header-user-controls {
     display: flex;
@@ -916,18 +917,18 @@
     }
   }
 
-  /* Esconde a seção de perfil por padrão em desktop */
-  @media (min-width: 993px) {
+  /* REMOVIDO: Esconde a seção de perfil por padrão em desktop */
+  /* @media (min-width: 993px) {
     #profile-section {
         display: none !important;
     }
-  }
+  } */
 </style>
 </head>
 <body>
 
 <header>
-  <h1>FofocaGram</h1>
+  <h1 id="app-title">FofocaGram</h1> <!-- Adicionado id="app-title" aqui -->
   <div class="header-user-controls" id="header-user-controls-desktop">
     <span id="user-email-desktop"></span>
     <button id="logout-btn-desktop">Sair</button>
@@ -1132,6 +1133,7 @@ const firebaseConfig = {
   const userEmailSpanDesktop = document.getElementById('user-email-desktop');
   const logoutBtnDesktop = document.getElementById('logout-btn-desktop');
   const headerUserControlsDesktop = document.getElementById('header-user-controls-desktop');
+  const appTitle = document.getElementById('app-title'); // NOVO: Referência ao título do app
 
   const postText = document.getElementById('post-text');
   const postMediaUrlInput = document.getElementById('post-media-url'); // Input para URL de mídia
@@ -2945,6 +2947,13 @@ const firebaseConfig = {
       notificationsList.innerHTML = '<li>Erro ao carregar notificações.</li>';
     }
   }
+
+  // NOVO: Event listener para o título do aplicativo
+  appTitle.addEventListener('click', () => {
+    if (currentUser) { // Apenas se o usuário estiver logado
+      showSection(appSection); // Volta para a seção principal (feed)
+    }
+  });
 
 </script>
 </body>
