@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FofocaGram- Rede Social</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- Font Awesome para ícones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap" rel="stylesheet">
+
+<style>
+  /* Reset e básico */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #fafafa;
+    color: #262626;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  header {
+    background: #fff;
+    border-bottom: 1px solid #dbdbdb;
+    color: #262626;
+    padding: 0.8rem 1rem;
+    width: 100%;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 {
+    font-family: 'Grand Hotel', cursive;
+    font-size: 2.2rem;
+    margin: 0;
+    color: #262626;
+  }
+  .header-user-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .header-user-controls #user-email {
+    font-weight: 600;
+    color: #262626;
+    font-size: 0.9rem;
+  }
+  .header-user-controls #logout-btn {
+    background: #ed4956;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 0;
+    width: auto;
+  }
+  .header-user-controls #logout-btn:hover {
+    background: #cc3745;
+  }
+
+  /* Layout principal */
+  .app-container {
+    display: grid;
+    grid-template-columns: 220px 1fr 320px;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+    width: 100%;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: sticky;
+    top: 1rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+  }
+  .sidebar a {
+    text-decoration: none;
+    color: #262626;
+    font-weight: 500;
+    font-size: 1.1rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+  }
+  .sidebar a:hover {
+    background: #efefef;
+  }
+  .sidebar a i {
+    font-size: 1.3rem;
+  }
+
+  /* Main feed */
+  .main-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* Barra de usuários que sigo */
+  .following-bar {
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    padding: 0.8rem;
+    border-radius: 8px;
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .following-user-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #262626;
+    font-size: 0.8rem;
+  }
+  .following-user-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #c7c7c7;
+    padding: 2px;
+  }
+  .following-user-item span {
+    margin-top: 0.4rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70px;
+  }
+
+  /* Rightbar */
+  .rightbar {
+    position: sticky;
+    top: 1rem;
+    height: fit-content;
+  }
+
+  /* Geral */
+  main {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  section {
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    color: #262626;
+    text-align: center;
+  }
+  input, textarea, button {
+    width: 100%;
+    padding: 0.7rem;
+    margin: 0.5rem 0 1rem 0;
+    border-radius: 3px;
+    border: 1px solid #dbdbdb;
+    font-size: 1rem;
+    background-color: #fafafa;
+    color: #262626;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #a8a8a8;
+  }
+  button {
+    background: #0095f6;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  button:hover {
+    background: #007acc;
+  }
+  button:disabled {
+    background: #b2dffc;
+    cursor: not-allowed;
+  }
+  /* Importante: use !important para garantir que a classe hidden sobrescreva outros estilos */
+  .hidden {
+    display: none !important;
+  }
+  #feed {
+    margin-top: 0;
+  }
+  .post {
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    margin-bottom: 1.5rem;
+    padding: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .post:last-child {
+    margin-bottom: 0;
+  }
+  .post-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #efefef;
+    position: relative;
+  }
+  .post-user {
+    font-weight: 600;
+    color: #262626;
+    margin-right: auto;
+  }
+  .post-date {
+    font-size: 0.75rem;
+    color: #8e8e8e;
+  }
+  .post-image {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+  }
+  .post-content {
+    padding: 0 1rem 1rem 1rem;
+  }
+  .post-text {
+    margin: 0.8rem 0;
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  .post-actions {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1.4rem;
+    color: #262626;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .post-actions button {
+    background: none;
+    border: none;
+    color: #262626;
+    cursor: pointer;
+    padding: 0;
+    width: auto;
+    margin: 0;
+    font-size: 1.4rem;
+  }
+  .post-actions button.liked {
+    color: #ed4956;
+  }
+  .post-likes-count {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  .post-comments-count {
+    font-size: 0.85rem;
+    color: #8e8e8e;
+    margin-top: 0.3rem;
+    cursor: pointer;
+    display: block;
+  }
+  .post-comments-count:hover {
+    text-decoration: underline;
+  }
+  #comments-section {
+    margin-top: 0.5rem;
+    border-top: 1px solid #efefef;
+    padding-top: 0.8rem;
+  }
+  .comment {
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .comment-text-container {
+    flex-grow: 1;
+  }
+  .comment-user {
+    font-weight: 600;
+    margin-right: 0.3rem;
+  }
+  .comment-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+  }
+  .comment-actions button {
+    background: none;
+    border: none;
+    color: #8e8e8e;
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.8rem;
+    width: auto;
+    margin: 0;
+  }
+  .comment-actions button:hover {
+    color: #262626;
+  }
+  .comment-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+    border-top: 1px solid #efefef;
+    padding-top: 0.8rem;
+  }
+  .comment-form input {
+    flex: 1;
+    margin: 0;
+    padding: 0.6rem;
+    background-color: #efefef;
+    border: 1px solid #dbdbdb;
+  }
+  .comment-form button {
+    width: auto;
+    padding: 0.6rem 1rem;
+    margin: 0;
+    font-size: 0.9rem;
+    background: #0095f6;
+  }
+  #follow-section {
+    margin-top: 0;
+  }
+  #users-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #efefef;
+    border-radius: 3px;
+    padding: 0.5rem;
+    background-color: #fafafa;
+  }
+  .user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid #efefef;
+  }
+  .user-item:last-child {
+    border-bottom: none;
+  }
+  .user-name {
+    font-weight: 500;
+    color: #262626;
+  }
+  .follow-btn {
+    background: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .follow-btn.following {
+    background: #efefef;
+    color: #262626;
+    border: 1px solid #dbdbdb;
+  }
+  #loading {
+    text-align: center;
+    margin-top: 1rem;
+    color: #8e8e8e;
+    font-size: 0.9rem;
+  }
+  #auth-section {
+    max-width: 350px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    text-align: center;
+  }
+  #auth-section h2 {
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    font-family: 'Grand Hotel', cursive;
+  }
+  #auth-section button {
+    margin-bottom: 0.5rem;
+  }
+  #auth-section p {
+    margin-top: 1rem;
+  }
+  #post-section {
+    /* Esta seção agora está dentro do popup, então não precisa de margin-bottom */
+    margin-bottom: 0;
+    padding: 0; /* O padding será do popup-content */
+    border: none; /* O border será do popup-content */
+    box-shadow: none; /* O shadow será do popup-content */
+  }
+  #post-section textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+  #post-image-input {
+    padding: 0.5rem;
+    background-color: transparent;
+    border: none;
+    margin-bottom: 0.5rem;
+  }
+  #post-image-input::-webkit-file-upload-button {
+    background: #0095f6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 10px;
+  }
+  #post-image-input::-webkit-file-upload-button:hover {
+    background: #007acc;
+  }
+  .post-owner-actions {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .post-owner-actions button {
+    background: none;
+    border: none;
+    color: #8e8e8e;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.2rem 0.4rem;
+    width: auto;
+    margin: 0;
+  }
+  .post-owner-actions button:hover {
+    color: #262626;
+  }
+
+  /* Popup */
+  .popup-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+  .popup-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+  }
+  .close-popup-btn {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #8e8e8e;
+    cursor: pointer;
+    padding: 0.5rem;
+    width: auto;
+    margin: 0;
+  }
+  .close-popup-btn:hover {
+    color: #262626;
+  }
+
+  /* Responsividade */
+  @media (max-width: 992px) {
+    .app-container {
+      grid-template-columns: 1fr;
+      margin: 1rem auto;
+      padding-bottom: 60px;
+    }
+    .sidebar, .rightbar {
+      display: none;
+    }
+    main {
+      max-width: 100%;
+    }
+    section, .post {
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+      margin-bottom: 1rem;
+    }
+    header {
+      padding: 0.5rem 1rem;
+    }
+    #auth-section {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+    .bottom-nav {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      border-top: 1px solid #dbdbdb;
+      padding: 0.5rem 0;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 -1px 5px rgba(0,0,0,0.05);
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #262626;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.2rem;
+      cursor: pointer;
+    }
+    .bottom-nav a i {
+      font-size: 1.5rem;
+      margin-bottom: 0.2rem;
+    }
+    .bottom-nav a:hover {
+      color: #0095f6;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>FofocaGram</h1>
+  <div class="header-user-controls hidden" id="header-user-controls">
+    <span id="user-email"></span>
+    <button id="logout-btn">Sair</button>
+  </div>
+</header>
+
+<main>
+  <!-- Área de autenticação -->
+  <section id="auth-section">
+    <h2>FofocaGram</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Senha" />
+    <button id="login-btn">Entrar</button>
+    <button id="signup-btn">Cadastrar</button>
+    <p id="auth-error" style="color:red;"></p>
+  </section>
+
+  <!-- Área principal após login -->
+  <div class="app-container hidden" id="app-section">
+    <!-- Sidebar (visível apenas em telas maiores) -->
+    <nav class="sidebar">
+      <a href="#"><i class="fas fa-home"></i> Página Inicial</a>
+      <a href="#"><i class="fas fa-compass"></i> Explorar</a>
+      <a href="#"><i class="fas fa-video"></i> Reels</a>
+      <a href="#"><i class="fas fa-heart"></i> Notificações</a>
+      <a href="#" id="menu-criar"><i class="fas fa-plus-square"></i> Criar</a>
+      <a href="#"><i class="fas fa-user-circle"></i> Perfil</a>
+    </nav>
+
+    <!-- Coluna central -->
+    <div class="main-feed">
+      <!-- Barra de usuários que sigo -->
+      <div class="following-bar" id="following-bar">
+        <!-- JS vai preencher com usuários que você segue -->
+      </div>
+
+      <!-- Feed -->
+      <section id="feed-section">
+        <div id="feed"></div>
+        <p id="loading" class="hidden">Carregando publicações...</p>
+      </section>
+    </div>
+
+    <!-- Lateral direita (visível apenas em telas maiores) -->
+    <aside class="rightbar">
+      <section id="follow-section">
+        <h2>Sugestões para você</h2>
+        <div id="users-list"></div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<!-- Popup para Nova Publicação -->
+<div class="popup-overlay hidden" id="post-section-popup">
+  <div class="popup-content">
+    <button class="close-popup-btn" aria-label="Fechar popup">×</button>
+    <section id="post-section">
+      <h2>Nova Publicação</h2>
+      <textarea id="post-text" rows="3" placeholder="Escreva uma legenda..."></textarea>
+      <input type="file" id="post-image-input" accept="image/*" />
+      <button id="post-btn">Publicar</button>
+      <p id="post-error" style="color:red;"></p>
+    </section>
+  </div>
+</div>
+
+<!-- Menu de navegação inferior para mobile -->
+<nav class="bottom-nav hidden" id="bottom-navigation">
+  <a href="#"><i class="fas fa-home"></i></a>
+  <a href="#"><i class="fas fa-compass"></i></a>
+  <a href="#" id="bottom-menu-criar"><i class="fas fa-plus-square"></i></a>
+  <a href="#"><i class="fas fa-heart"></i></a>
+  <a href="#"><i class="fas fa-user-circle"></i></a>
+</nav>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+<script>
+  // Configuração do Firebase - substitua pelos seus dados do projeto
+const firebaseConfig = {
+  apiKey: "AIzaSyDgOFGtSwpOygRYZKRecgornhmJtw9bylo", // <== Substitua pelo seu apiKey
+  authDomain: "gametwitter-24bc3.firebaseapp.com", // <== Substitua pelo seu authDomain
+  projectId: "gametwitter-24bc3", // <== Substitua pelo seu projectId
+  storageBucket: "gametwitter-24bc3.appspot.com", // <== Substitua pelo seu storageBucket
+  messagingSenderId: "866667398712", // <== Substitua pelo seu messagingSenderId
+  appId: "1:866667398712:web:edc1e6241aeac74caf88cd" // <== Substitua pelo seu appId
+};
+
+
+  // Inicializa Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+ 
+
+  // Elementos do DOM
+  const authSection = document.getElementById('auth-section');
+  const appSection = document.getElementById('app-section');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('login-btn');
+  const signupBtn = document.getElementById('signup-btn');
+  const authError = document.getElementById('auth-error');
+  const userEmailSpan = document.getElementById('user-email');
+  const logoutBtn = document.getElementById('logout-btn');
+  const headerUserControls = document.getElementById('header-user-controls');
+
+  const postText = document.getElementById('post-text');
+  const postImageInput = document.getElementById('post-image-input');
+  const postBtn = document.getElementById('post-btn');
+  const postError = document.getElementById('post-error');
+
+  const feedDiv = document.getElementById('feed');
+  const loadingText = document.getElementById('loading');
+
+  const usersListDiv = document.getElementById('users-list');
+  const followingBar = document.getElementById('following-bar');
+  const bottomNavigation = document.getElementById('bottom-navigation');
+
+  // Elementos do Popup de Nova Publicação
+  const menuCriarBtn = document.getElementById('menu-criar'); // Botão "Criar" na sidebar
+  const bottomMenuCriarBtn = document.getElementById('bottom-menu-criar'); // Botão "Criar" no menu inferior
+  const postSectionPopup = document.getElementById('post-section-popup'); // O popup em si
+  const closePopupBtn = postSectionPopup.querySelector('.close-popup-btn'); // Botão "X" para fechar o popup
+
+
+  let currentUser = null;
+  let unsubscribeFeed = null;
+
+  // Função para mostrar erro temporariamente
+  function showError(element, message) {
+    element.textContent = message;
+    setTimeout(() => {
+      element.textContent = '';
+    }, 4000);
+  }
+
+  // Login
+  loginBtn.addEventListener('click', () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!email || !password) {
+      showError(authError, 'Preencha email e senha');
+      return;
+    }
+    auth.signInWithEmailAndPassword(email, password)
+      .catch(e => showError(authError, e.message));
+  });
+
+  // Cadastro
+  signupBtn.addEventListener('click', () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!email || !password) {
+      showError(authError, 'Preencha email e senha');
+      return;
+    }
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(cred => {
+        // Criar perfil do usuário no Firestore
+        return db.collection('users').doc(cred.user.uid).set({
+          email: email,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          followers: [],
+          following: []
+        });
+      })
+      .catch(e => showError(authError, e.message));
+  });
+
+  // Logout
+  logoutBtn.addEventListener('click', () => {
+    auth.signOut();
+  });
+
+  // Atualiza UI após login/logout
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      userEmailSpan.textContent = user.email.split('@')[0]; // Exibe apenas o nome de usuário
+      authSection.classList.add('hidden');
+      appSection.classList.remove('hidden');
+      headerUserControls.classList.remove('hidden'); // Mostra os controles do usuário no header
+      bottomNavigation.classList.remove('hidden'); // Mostra o menu inferior
+      loadUsersToFollow();
+      loadFollowingUsersBar(); // Carrega a barra de usuários seguidos
+      startFeedListener();
+    } else {
+      currentUser = null;
+      userEmailSpan.textContent = '';
+      authSection.classList.remove('hidden');
+      appSection.classList.add('hidden');
+      headerUserControls.classList.add('hidden'); // Esconde os controles do usuário no header
+      bottomNavigation.classList.add('hidden'); // Esconde o menu inferior
+      if (unsubscribeFeed) unsubscribeFeed(); // Para de ouvir o feed
+      feedDiv.innerHTML = '';
+      usersListDiv.innerHTML = '';
+      followingBar.innerHTML = ''; // Limpa a barra de seguidos
+    }
+  });
+
+  // Postar
+  postBtn.addEventListener('click', async () => {
+    postError.textContent = '';
+    const text = postText.value.trim();
+    const file = postImageInput.files[0];
+
+    if (!text && !file) {
+      showError(postError, 'Escreva algo ou selecione uma imagem');
+      return;
+    }
+
+    postBtn.disabled = true;
+    postBtn.textContent = 'Publicando...';
+
+    try {
+      let imageUrl = null;
+      if (file) {
+        // Upload imagem para o Firebase Storage
+        const storageRef = storage.ref();
+        const imageRef = storageRef.child(`posts/${currentUser.uid}/${Date.now()}_${file.name}`);
+        const snapshot = await imageRef.put(file);
+        imageUrl = await snapshot.ref.getDownloadURL();
+      }
+
+      // Criar post no Firestore
+      await db.collection('posts').add({
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        text: text,
+        imageUrl: imageUrl,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        likes: [],
+        comments: []
+      });
+
+      postText.value = ''; // Limpa o campo de texto
+      postImageInput.value = ''; // Limpa o input de arquivo
+      postSectionPopup.classList.add('hidden'); // Fecha o popup após a publicação
+    } catch (e) {
+      showError(postError, 'Erro ao publicar: ' + e.message);
+    }
+
+    postBtn.disabled = false;
+    postBtn.textContent = 'Publicar';
+  });
+
+  // Carregar usuários para seguir (Sugestões para você)
+  async function loadUsersToFollow() {
+    usersListDiv.innerHTML = 'Carregando usuários...';
+    try {
+      const usersSnapshot = await db.collection('users').get();
+      const users = [];
+      usersSnapshot.forEach(doc => {
+        if (doc.id !== currentUser.uid) { // Não mostra o próprio usuário
+          users.push({ id: doc.id, ...doc.data() });
+        }
+      });
+
+      // Buscar dados do usuário atual para saber quem ele já segue
+      const currentUserDoc = await db.collection('users').doc(currentUser.uid).get();
+      const currentUserData = currentUserDoc.data();
+      const following = currentUserData.following || [];
+
+      usersListDiv.innerHTML = '';
+      if (users.length === 0) {
+        usersListDiv.textContent = 'Nenhum outro usuário cadastrado.';
+        return;
+      }
+
+      let usersDisplayed = false;
+      users.forEach(user => {
+        // Apenas mostra usuários que o currentUser AINDA NÃO segue
+        if (!following.includes(user.id)) {
+          const div = document.createElement('div');
+          div.classList.add('user-item');
+          const nameSpan = document.createElement('span');
+          nameSpan.classList.add('user-name');
+          nameSpan.textContent = user.email.split('@')[0]; // Exibe apenas o nome de usuário
+          const btn = document.createElement('button');
+          btn.classList.add('follow-btn');
+          btn.textContent = 'Seguir';
+          btn.addEventListener('click', () => toggleFollow(user.id, btn));
+          div.appendChild(nameSpan);
+          div.appendChild(btn);
+          usersListDiv.appendChild(div);
+          usersDisplayed = true;
+        }
+      });
+
+      if (!usersDisplayed) {
+        usersListDiv.textContent = 'Você já segue todos os usuários disponíveis ou não há outros usuários.';
+      }
+
+    } catch (e) {
+      usersListDiv.textContent = 'Erro ao carregar usuários: ' + e.message;
+    }
+  }
+
+  // Carregar usuários que o usuário atual segue para a barra superior
+  async function loadFollowingUsersBar() {
+    followingBar.innerHTML = ''; // Limpa a barra antes de preencher
+    try {
+      const currentUserDoc = await db.collection('users').doc(currentUser.uid).get();
+      const currentUserData = currentUserDoc.data();
+      const followingIds = currentUserData.following || [];
+
+      if (followingIds.length === 0) {
+        followingBar.textContent = 'Você ainda não segue ninguém.';
+        followingBar.style.justifyContent = 'center'; // Centraliza o texto
+        return;
+      }
+      followingBar.style.justifyContent = 'flex-start'; // Volta ao padrão
+
+      // Busca os dados de cada usuário seguido
+      for (const userId of followingIds) {
+        const userDoc = await db.collection('users').doc(userId).get();
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          const div = document.createElement('div');
+          div.classList.add('following-user-item');
+          // Adicionar imagem de perfil (se houver, caso contrário, um placeholder)
+          const img = document.createElement('img');
+          img.src = userData.profilePictureUrl || 'https://via.placeholder.com/60'; // Placeholder
+          img.alt = userData.email.split('@')[0];
+          const span = document.createElement('span');
+          span.textContent = userData.email.split('@')[0];
+          div.appendChild(img);
+          div.appendChild(span);
+          followingBar.appendChild(div);
+        }
+      }
+    } catch (e) {
+      followingBar.textContent = 'Erro ao carregar seguidos: ' + e.message;
+    }
+  }
+
+  // Seguir / Desseguir usuário
+  async function toggleFollow(userId, btn) {
+    btn.disabled = true;
+    try {
+      const currentUserRef = db.collection('users').doc(currentUser.uid);
+      const userToFollowRef = db.collection('users').doc(userId);
+
+      const currentUserDoc = await currentUserRef.get();
+      const userToFollowDoc = await userToFollowRef.get();
+
+      if (!currentUserDoc.exists || !userToFollowDoc.exists) {
+        alert('Usuário não encontrado');
+        btn.disabled = false;
+        return;
+      }
+
+      const currentUserData = currentUserDoc.data();
+      const userToFollowData = userToFollowDoc.data();
+
+      let following = currentUserData.following || [];
+      let followers = userToFollowData.followers || [];
+
+      if (following.includes(userId)) {
+        // Desseguir
+        following = following.filter(id => id !== userId);
+        followers = followers.filter(id => id !== currentUser.uid);
+        btn.textContent = 'Seguir';
+        btn.classList.remove('following');
+      } else {
+        // Seguir
+        following.push(userId);
+        followers.push(currentUser.uid);
+        btn.textContent = 'Seguindo';
+        btn.classList.add('following');
+      }
+
+      // Atualizar no banco de dados
+      await currentUserRef.update({ following });
+      await userToFollowRef.update({ followers });
+
+      // Recarregar a lista de sugestões e a barra de seguidos
+      loadUsersToFollow();
+      loadFollowingUsersBar();
+
+      // Atualizar feed para refletir posts dos seguidos
+      if (unsubscribeFeed) unsubscribeFeed(); // Cancela o listener anterior
+      startFeedListener(); // Inicia um novo listener com a lista atualizada de seguidos
+
+    } catch (e) {
+      alert('Erro ao seguir/desseguir: ' + e.message);
+    }
+    btn.disabled = false;
+  }
+
+  // Iniciar listener do feed
+  async function startFeedListener() {
+    feedDiv.innerHTML = '';
+    loadingText.classList.remove('hidden');
+
+    // Buscar lista de usuários que o atual segue + ele mesmo
+    const currentUserDoc = await db.collection('users').doc(currentUser.uid).get();
+    const currentUserData = currentUserDoc.data();
+    let following = currentUserData.following || [];
+    
+    // Garante que o próprio usuário esteja sempre incluído na lista para o feed
+    const usersToFetchPostsFrom = new Set(following);
+    usersToFetchPostsFrom.add(currentUser.uid); // Adiciona o ID do usuário atual
+    
+    const usersToShow = Array.from(usersToFetchPostsFrom);
+
+    // Query posts dos usuários seguidos e do próprio usuário, ordenados por data desc
+    // Limitação: 'in' só aceita até 10 valores. Se 'usersToShow' for maior, precisaria de múltiplas queries.
+    if (usersToShow.length === 0) {
+        feedDiv.textContent = 'Nenhuma publicação para mostrar. Siga alguns usuários!';
+        loadingText.classList.add('hidden');
+        return;
+    }
+    
+    unsubscribeFeed = db.collection('posts')
+      .where('userId', 'in', usersToShow.slice(0, 10)) // Pega os primeiros 10 se houver mais
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(snapshot => {
+        feedDiv.innerHTML = '';
+        if (snapshot.empty) {
+          feedDiv.textContent = 'Nenhuma publicação para mostrar.';
+          loadingText.classList.add('hidden');
+          return;
+        }
+        snapshot.forEach(doc => {
+          const post = { id: doc.id, ...doc.data() };
+          feedDiv.appendChild(createPostElement(post));
+        });
+        loadingText.classList.add('hidden');
+      }, err => {
+        feedDiv.textContent = 'Erro ao carregar feed: ' + err.message;
+        loadingText.classList.add('hidden');
+      });
+  }
+
+  // Criar elemento de post
+  function createPostElement(post) {
+    const div = document.createElement('div');
+    div.classList.add('post');
+    div.dataset.postId = post.id; // Adiciona o ID do post como um atributo de dados
+
+    // Cabeçalho
+    const header = document.createElement('div');
+    header.classList.add('post-header');
+    const userSpan = document.createElement('span');
+    userSpan.classList.add('post-user');
+    userSpan.textContent = post.userEmail.split('@')[0]; // Exibe apenas o nome de usuário
+    const dateSpan = document.createElement('span');
+    dateSpan.classList.add('post-date');
+    if (post.createdAt && post.createdAt.toDate) {
+      dateSpan.textContent = formatPostDate(post.createdAt.toDate());
+    } else {
+      dateSpan.textContent = '';
+    }
+    header.appendChild(userSpan);
+    header.appendChild(dateSpan);
+
+    // Botões de Editar/Excluir Post (apenas para o dono)
+    if (currentUser && post.userId === currentUser.uid) {
+      const ownerActionsDiv = document.createElement('div');
+      ownerActionsDiv.classList.add('post-owner-actions');
+
+      const editPostBtn = document.createElement('button');
+      editPostBtn.innerHTML = '<i class="fas fa-edit"></i>';
+      editPostBtn.title = 'Editar Post';
+      editPostBtn.addEventListener('click', () => editPost(post));
+      ownerActionsDiv.appendChild(editPostBtn);
+
+      const deletePostBtn = document.createElement('button');
+      deletePostBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+      deletePostBtn.title = 'Excluir Post';
+      deletePostBtn.addEventListener('click', () => deletePost(post.id, post.imageUrl));
+      ownerActionsDiv.appendChild(deletePostBtn);
+
+      header.appendChild(ownerActionsDiv);
+    }
+
+    div.appendChild(header);
+
+    // Imagem
+    if (post.imageUrl) {
+      const img = document.createElement('img');
+      img.classList.add('post-image');
+      img.src = post.imageUrl;
+      img.alt = 'Imagem publicada pelo usuário';
+      div.appendChild(img);
+    }
+
+    // Conteúdo do post (texto, ações, likes, comentários)
+    const contentDiv = document.createElement('div');
+    contentDiv.classList.add('post-content');
+
+    // Ações: Curtir, Comentar
+    const actionsDiv = document.createElement('div');
+    actionsDiv.classList.add('post-actions');
+
+    // Curtir
+    const likeBtn = document.createElement('button');
+    const liked = post.likes.includes(currentUser.uid);
+    likeBtn.innerHTML = liked ? `<i class="fas fa-heart"></i>` : `<i class="far fa-heart"></i>`;
+    if (liked) likeBtn.classList.add('liked');
+    likeBtn.addEventListener('click', () => toggleLike(post, likeBtn));
+    actionsDiv.appendChild(likeBtn);
+
+    // Comentar (ícone de balão de fala)
+    const commentBtn = document.createElement('button');
+    commentBtn.innerHTML = `<i class="far fa-comment"></i>`;
+    // O evento de clique para mostrar/esconder comentários será no post-comments-count
+    actionsDiv.appendChild(commentBtn);
+
+    contentDiv.appendChild(actionsDiv);
+
+    // Contagem de likes
+    const likesCountSpan = document.createElement('span');
+    likesCountSpan.classList.add('post-likes-count');
+    likesCountSpan.textContent = `${post.likes.length} curtidas`;
+    contentDiv.appendChild(likesCountSpan);
+
+    // Contagem de comentários
+    const commentsCountSpan = document.createElement('span');
+    commentsCountSpan.classList.add('post-comments-count');
+    const commentCount = post.comments ? post.comments.length : 0;
+    commentsCountSpan.textContent = `Ver todos os ${commentCount} comentários`;
+    commentsCountSpan.addEventListener('click', () => toggleCommentsSection(div, post)); // Evento de clique para mostrar/esconder comentários
+    contentDiv.appendChild(commentsCountSpan);
+
+    // Texto
+    const textP = document.createElement('p');
+    textP.classList.add('post-text');
+    const userEmailPart = post.userEmail.split('@')[0];
+    textP.innerHTML = `<span class="post-user">${userEmailPart}</span> ${post.text || ''}`;
+    contentDiv.appendChild(textP);
+
+    div.appendChild(contentDiv);
+
+    return div;
+  }
+
+  // Função para formatar a data do post
+  function formatPostDate(date) {
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffMinutes = Math.floor(diffTime / (1000 * 60));
+    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffMinutes < 60) {
+      return `${diffMinutes}m`;
+    } else if (diffHours < 24) {
+      return `${diffHours}h`;
+    } else if (diffDays < 7) {
+      return `${diffDays}d`;
+    } else {
+      return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' });
+    }
+  }
+
+  // Lógica de curtir/descurtir
+  async function toggleLike(post, btn) {
+    try {
+      const postRef = db.collection('posts').doc(post.id);
+      const postDoc = await postRef.get();
+      if (!postDoc.exists) return;
+
+      const postData = postDoc.data();
+      let likes = postData.likes || [];
+      const liked = likes.includes(currentUser.uid);
+
+      if (liked) {
+        likes = likes.filter(id => id !== currentUser.uid);
+      } else {
+        likes.push(currentUser.uid);
+      }
+
+      // Atualizar likes no Firestore
+      await postRef.update({ likes });
+
+      // A UI será atualizada automaticamente pelo onSnapshot do feed
+    } catch (e) {
+      alert('Erro ao curtir publicação: ' + e.message);
+    }
+  }
+
+  // Função para editar um post
+  async function editPost(post) {
+    const newText = prompt('Edite sua publicação:', post.text);
+    if (newText !== null && newText.trim() !== '') {
+      try {
+        await db.collection('posts').doc(post.id).update({
+          text: newText.trim()
+        });
+        // O listener do feed (onSnapshot) irá atualizar a UI automaticamente
+      } catch (e) {
+        alert('Erro ao editar publicação: ' + e.message);
+      }
+    }
+  }
+
+  // Função para excluir um post
+  async function deletePost(postId, imageUrl) {
+    if (confirm('Tem certeza que deseja excluir esta publicação?')) {
+      try {
+        // Excluir imagem do Storage, se existir
+        if (imageUrl) {
+          const imageRef = storage.refFromURL(imageUrl);
+          await imageRef.delete().catch(error => {
+            // Ignorar erro se o arquivo não existir (já foi excluído ou URL inválida)
+            console.warn('Erro ao excluir imagem do Storage (pode não existir):', error);
+          });
+        }
+        // Excluir post do Firestore
+        await db.collection('posts').doc(postId).delete();
+        // O listener do feed (onSnapshot) irá atualizar a UI automaticamente
+      } catch (e) {
+        alert('Erro ao excluir publicação: ' + e.message);
+      }
+    }
+  }
+
+  // Toggle comentários
+  function toggleCommentsSection(postDiv, post) {
+    let commentsSection = postDiv.querySelector('#comments-section');
+    let commentsContainer;
+
+    if (commentsSection) {
+      // Se a seção já existe, apenas alterna a visibilidade
+      commentsSection.classList.toggle('hidden');
+      return;
+    }
+
+    // Criar seção de comentários
+    commentsSection = document.createElement('div');
+    commentsSection.id = 'comments-section';
+    
+    commentsContainer = document.createElement('div');
+    commentsContainer.classList.add('comments-container'); // Para estilizar a lista de comentários
+    commentsSection.appendChild(commentsContainer);
+
+    // Função para renderizar comentários
+    const renderComments = (comments) => {
+      commentsContainer.innerHTML = ''; // Limpa os comentários existentes
+      if (comments && comments.length > 0) {
+        comments.forEach((comment, index) => {
+          const commentDiv = document.createElement('div');
+          commentDiv.classList.add('comment');
+          
+          const textContainer = document.createElement('div');
+          textContainer.classList.add('comment-text-container');
+          const userSpan = document.createElement('span');
+          userSpan.classList.add('comment-user');
+          userSpan.textContent = comment.userEmail.split('@')[0] + ' ';
+          const textSpan = document.createElement('span');
+          textSpan.textContent = comment.text;
+          textContainer.appendChild(userSpan);
+          textContainer.appendChild(textSpan);
+          commentDiv.appendChild(textContainer);
+
+          // Botões de Editar/Excluir Comentário (apenas para o autor)
+          if (currentUser && comment.userId === currentUser.uid) {
+            const commentActionsDiv = document.createElement('div');
+            commentActionsDiv.classList.add('comment-actions');
+
+            const editCommentBtn = document.createElement('button');
+            editCommentBtn.innerHTML = '<i class="fas fa-edit"></i>';
+            editCommentBtn.title = 'Editar Comentário';
+            editCommentBtn.addEventListener('click', () => editComment(post.id, index, comment.text));
+            commentActionsDiv.appendChild(editCommentBtn);
+
+            const deleteCommentBtn = document.createElement('button');
+            deleteCommentBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+            deleteCommentBtn.title = 'Excluir Comentário';
+            deleteCommentBtn.addEventListener('click', () => deleteComment(post.id, index));
+            commentActionsDiv.appendChild(deleteCommentBtn);
+
+            commentDiv.appendChild(commentActionsDiv);
+          }
+          commentsContainer.appendChild(commentDiv);
+        });
+      } else {
+        commentsContainer.textContent = 'Nenhum comentário ainda.';
+        commentsContainer.style.fontSize = '0.85rem';
+        commentsContainer.style.color = '#8e8e8e';
+      }
+    };
+
+    // Renderiza os comentários iniciais
+    renderComments(post.comments);
+
+    // Formulário para comentar
+    const commentForm = document.createElement('div');
+    commentForm.classList.add('comment-form');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Adicione um comentário...';
+    const submitBtn = document.createElement('button');
+    submitBtn.type = 'button';
+    submitBtn.textContent = 'Publicar';
+    submitBtn.onclick = async () => {
+      const text = input.value.trim();
+      if (!text) return;
+      try {
+        const newComment = {
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          text: text,
+          createdAt: new Date() 
+        };
+        
+        // Adicionar comentário ao post no Firestore
+        await db.collection('posts').doc(post.id).update({
+          comments: firebase.firestore.FieldValue.arrayUnion(newComment)
+        });
+
+        input.value = ''; // Limpa o input
+
+        // Melhoria: Adicionar o comentário à lista localmente para feedback imediato
+        // Isso evita um pequeno atraso até o onSnapshot do feed atualizar
+        const tempComment = {
+            userId: currentUser.uid,
+            userEmail: currentUser.email,
+            text: text,
+            createdAt: new Date() 
+        };
+        // Atualiza o array de comentários do objeto 'post' na memória
+        if (!post.comments) {
+            post.comments = [];
+        }
+        post.comments.push(tempComment);
+        renderComments(post.comments); // Renderiza novamente a lista de comentários
+
+        // Atualiza a contagem de comentários no post
+        const commentsCountSpan = postDiv.querySelector('.post-comments-count');
+        commentsCountSpan.textContent = `Ver todos os ${post.comments.length} comentários`;
+        
+      } catch (e) {
+        alert('Erro ao comentar: ' + e.message);
+      }
+    };
+    commentForm.appendChild(input);
+    commentForm.appendChild(submitBtn);
+    commentsSection.appendChild(commentForm);
+
+    postDiv.querySelector('.post-content').appendChild(commentsSection); // Adiciona a seção de comentários dentro do post-content
+  }
+
+  // Função para editar um comentário
+  async function editComment(postId, commentIndex, currentText) {
+    const newText = prompt('Edite seu comentário:', currentText);
+    if (newText !== null && newText.trim() !== '') {
+      try {
+        const postRef = db.collection('posts').doc(postId);
+        const postDoc = await postRef.get();
+        if (!postDoc.exists) return;
+
+        const comments = postDoc.data().comments || [];
+        if (commentIndex >= 0 && commentIndex < comments.length) {
+          comments[commentIndex].text = newText.trim();
+          await postRef.update({ comments: comments });
+          // O listener do feed (onSnapshot) irá atualizar a UI automaticamente
+        }
+      } catch (e) {
+        alert('Erro ao editar comentário: ' + e.message);
+      }
+    }
+  }
+
+  // Função para excluir um comentário
+  async function deleteComment(postId, commentIndex) {
+    if (confirm('Tem certeza que deseja excluir este comentário?')) {
+      try {
+        const postRef = db.collection('posts').doc(postId);
+        const postDoc = await postRef.get();
+        if (!postDoc.exists) return;
+
+        let comments = postDoc.data().comments || [];
+        if (commentIndex >= 0 && commentIndex < comments.length) {
+          comments.splice(commentIndex, 1); // Remove o comentário pelo índice
+          await postRef.update({ comments: comments });
+          // O listener do feed (onSnapshot) irá atualizar a UI automaticamente
+        }
+      } catch (e) {
+        alert('Erro ao excluir comentário: ' + e.message);
+      }
+    }
+  }
+
+  // Event listeners para abrir o popup de nova publicação
+  menuCriarBtn.addEventListener('click', (e) => {
+    e.preventDefault(); // Previne o comportamento padrão do link
+    postSectionPopup.classList.remove('hidden'); // Remove a classe 'hidden' para mostrar o popup
+  });
+
+  bottomMenuCriarBtn.addEventListener('click', (e) => {
+    e.preventDefault(); // Previne o comportamento padrão do link
+    postSectionPopup.classList.remove('hidden'); // Remove a classe 'hidden' para mostrar o popup
+  });
+
+  // Event listener para fechar o popup clicando no "X"
+  closePopupBtn.addEventListener('click', () => {
+    postSectionPopup.classList.add('hidden'); // Adiciona a classe 'hidden' para ocultar o popup
+  });
+
+  // Event listener para fechar o popup clicando fora do conteúdo
+  postSectionPopup.addEventListener('click', (e) => {
+    if (e.target === postSectionPopup) { // Verifica se o clique foi no overlay e não no conteúdo
+      postSectionPopup.classList.add('hidden');
+    }
+  });
+
+</script>
+</body>
+</html>
