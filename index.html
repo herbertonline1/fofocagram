@@ -697,6 +697,20 @@
     color: #bbb;
     margin-left: auto;
   }
+  /* Estilo para o botão de exclusão de story */
+  #story-viewer-info .delete-story-btn {
+    background: none;
+    border: none;
+    color: #ed4956; /* Cor vermelha para exclusão */
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px; /* Espaçamento do lado direito */
+  }
+  #story-viewer-info .delete-story-btn:hover {
+    color: #cc3745;
+  }
+
   #story-viewer-controls {
     position: absolute;
     top: 50%;
@@ -970,6 +984,8 @@
         <img id="story-viewer-user-pic" src="" alt="User Pic">
         <span id="story-viewer-username"></span>
         <span class="story-date" id="story-viewer-date"></span>
+        <!-- Botão de exclusão de story (visível apenas para o criador) -->
+        <button id="delete-story-btn" class="delete-story-btn hidden" title="Excluir Story"><i class="fas fa-trash-alt"></i></button>
       </div>
       <div id="story-viewer-controls">
         <button id="prev-story-btn"><i class="fas fa-chevron-left"></i></button>
@@ -1103,6 +1119,7 @@ const firebaseConfig = {
   const storyCommentInput = document.getElementById('story-comment-input');
   const storyCommentBtn = document.getElementById('story-comment-btn');
   const storyViewerCommentsList = document.getElementById('story-viewer-comments-list');
+  const deleteStoryBtn = document.getElementById('delete-story-btn'); // Novo elemento para o botão de exclusão de story
 
 
   let currentUser = null;
@@ -2318,6 +2335,13 @@ const firebaseConfig = {
       storyViewerUsername.textContent = userData.email.split('@')[0];
       storyViewerUserPic.src = userData.profilePictureUrl || 'https://via.placeholder.com/30';
 
+      // Mostra/esconde o botão de exclusão
+      if (currentUser && userId === currentUser.uid) {
+        deleteStoryBtn.classList.remove('hidden');
+      } else {
+        deleteStoryBtn.classList.add('hidden');
+      }
+
       currentStoryIndex = 0;
       renderStory(currentStories[currentStoryIndex]);
       storyViewerPopup.classList.remove('hidden');
@@ -2532,6 +2556,48 @@ const firebaseConfig = {
       }
     }
   }
+
+  // NOVO: Função para excluir um story
+  deleteStoryBtn.addEventListener('click', async () => {
+    if (!currentUser || !currentStoryUserId || currentStories.length === 0) return;
+
+    const storyToDelete = currentStories[currentStoryIndex];
+
+    if (currentUser.uid !== currentStoryUserId) {
+      alert('Você não tem permissão para excluir este story.');
+      return;
+    }
+
+    if (confirm('Tem certeza que deseja excluir este story?')) {
+      try {
+        const userRef = db.collection('users').doc(currentStoryUserId);
+        const userDoc = await userRef.get();
+        if (!userDoc.exists) return;
+
+        let stories = userDoc.data().stories || [];
+        const updatedStories = stories.filter(s => s.id !== storyToDelete.id);
+
+        await userRef.update({ stories: updatedStories });
+
+        // Se o story excluído for uma imagem do Storage, também a exclua de lá
+        // (Assumindo que stories do Storage teriam uma URL específica, similar aos posts)
+        const storageBucketPrefix = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/stories`; // Ajuste o caminho se seus stories forem em outro lugar
+        if (storyToDelete.mediaUrl && storyToDelete.mediaUrl.startsWith(storageBucketPrefix)) {
+          const imageRef = storage.refFromURL(storyToDelete.mediaUrl);
+          await imageRef.delete().catch(error => {
+            console.warn('Erro ao excluir mídia do story do Storage (pode não existir ou não ser do Storage):', error);
+          });
+        }
+
+        alert('Story excluído com sucesso!');
+        storyViewerPopup.classList.add('hidden'); // Fecha o visualizador
+        loadFollowingUsersBar(); // Atualiza a barra de stories
+      } catch (e) {
+        alert('Erro ao excluir story: ' + e.message);
+        console.error(e);
+      }
+    }
+  });
 
 </script>
 </body>
