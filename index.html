@@ -784,6 +784,52 @@
     color: #bbb;
   }
 
+  /* Estilos para o popup de notificações */
+  #notifications-popup .popup-content {
+    max-width: 450px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  #notifications-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  #notifications-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    color: #262626;
+  }
+  #notifications-list li:last-child {
+    border-bottom: none;
+  }
+  #notifications-list li strong {
+    font-weight: 600;
+  }
+  #notifications-list li .notification-date {
+    font-size: 0.75rem;
+    color: #8e8e8e;
+    margin-left: 5px;
+  }
+
+  /* Estilo para o contador de notificações no ícone de sino */
+  #notification-count {
+    background-color: #ed4956; /* Cor de fundo vermelha */
+    color: white; /* Cor do texto branca */
+    border-radius: 50%; /* Forma circular */
+    padding: 2px 6px; /* Preenchimento para o número */
+    font-size: 0.7rem; /* Tamanho da fonte menor */
+    position: absolute; /* Posicionamento absoluto em relação ao pai */
+    top: 0px; /* Ajuste a posição vertical */
+    right: 0px; /* Ajuste a posição horizontal */
+    transform: translate(50%, -50%); /* Centraliza o badge */
+    min-width: 18px; /* Largura mínima para números de um dígito */
+    text-align: center; /* Centraliza o texto */
+    line-height: 1; /* Altura da linha para centralizar verticalmente */
+    box-shadow: 0 0 0 2px #fff; /* Borda branca para destaque */
+  }
+
 
   /* Responsividade */
   @media (max-width: 992px) {
@@ -792,8 +838,18 @@
       margin: 1rem auto;
       padding-bottom: 60px;
     }
-    .sidebar, .rightbar {
-      display: none;
+    .sidebar {
+      display: none; /* Esconde a sidebar em mobile */
+    }
+    /* Mostra o rightbar (sugestões) em mobile */
+    .rightbar {
+      display: block; /* Altera de none para block */
+      position: static; /* Remove o sticky para fluir com o conteúdo */
+      margin: 1rem; /* Adiciona margem para não colar nas bordas */
+      padding: 1rem;
+      background: #fff;
+      border: 1px solid #dbdbdb;
+      border-radius: 8px;
     }
     main {
       max-width: 100%;
@@ -854,6 +910,10 @@
     #profile-section:not(.hidden-mobile) {
         display: flex; /* Ou block, dependendo do layout desejado */
     }
+    /* Ajuste para o link do ícone de notificações para posicionamento relativo */
+    .bottom-nav a#bottom-nav-notifications {
+      position: relative;
+    }
   }
 
   /* Esconde a seção de perfil por padrão em desktop */
@@ -913,6 +973,7 @@
     </div>
 
     <!-- Lateral direita (visível apenas em telas maiores) -->
+    <!-- Mova esta seção para dentro do main-feed para que ela apareça em mobile -->
     <aside class="rightbar">
       <section id="follow-section">
         <h2>Sugestões para você</h2>
@@ -1008,6 +1069,20 @@
   </div>
 </div>
 
+<!-- NOVO: Popup para Notificações -->
+<div class="popup-overlay hidden" id="notifications-popup">
+  <div class="popup-content">
+    <button class="close-popup-btn" aria-label="Fechar popup">×</button>
+    <section id="notifications-section">
+      <h2>Notificações</h2>
+      <ul id="notifications-list">
+        <!-- As notificações serão carregadas aqui pelo JavaScript -->
+      </ul>
+      <p id="no-notifications" class="hidden" style="text-align: center; color: #8e8e8e;">Nenhuma notificação nova.</p>
+    </section>
+  </div>
+</div>
+
 
 <!-- Menu de navegação inferior para mobile -->
 <nav class="bottom-nav hidden" id="bottom-navigation">
@@ -1015,7 +1090,7 @@
   <a href="#"><i class="fas fa-compass"></i></a>
   <a href="#" id="bottom-menu-criar"><i class="fas fa-plus-square"></i></a>
   <a href="#" id="bottom-menu-criar-story"><i class="fas fa-camera"></i></a>
-  <a href="#"><i class="fas fa-heart"></i></a>
+  <a href="#" id="bottom-nav-notifications"><i class="fas fa-bell"></i><span id="notification-count" class="hidden"></span></a> <!-- NOVO: Ícone de Notificações -->
   <a href="#" id="bottom-nav-profile"><i class="fas fa-user-circle"></i></a>
 </nav>
 
@@ -1121,6 +1196,14 @@ const firebaseConfig = {
   const storyViewerCommentsList = document.getElementById('story-viewer-comments-list');
   const deleteStoryBtn = document.getElementById('delete-story-btn'); // Novo elemento para o botão de exclusão de story
 
+  // NOVO: Elementos do Popup de Notificações
+  const bottomNavNotificationsBtn = document.getElementById('bottom-nav-notifications');
+  const notificationsPopup = document.getElementById('notifications-popup');
+  const notificationsCloseBtn = notificationsPopup.querySelector('.close-popup-btn');
+  const notificationsList = document.getElementById('notifications-list');
+  const noNotificationsText = document.getElementById('no-notifications');
+  const notificationCountSpan = document.getElementById('notification-count'); // NOVO: Elemento para a contagem de notificações
+
 
   let currentUser = null;
   let unsubscribeFeed = null;
@@ -1172,7 +1255,7 @@ const firebaseConfig = {
   // Login
   loginBtn.addEventListener('click', () => {
     const email = emailInput.value.trim();
-    const password = passwordInput.value;
+    const password = password.value;
     if (!email || !password) {
       showError(authError, 'Preencha email e senha');
       return;
@@ -1199,7 +1282,8 @@ const firebaseConfig = {
           following: [],
           profilePictureUrl: '', // Adiciona um campo vazio para a URL da foto de perfil
           stories: [], // Novo campo para armazenar stories
-          viewedStories: {} // Novo campo para armazenar stories visualizados
+          viewedStories: {}, // Novo campo para armazenar stories visualizados
+          lastNotificationCheck: firebase.firestore.FieldValue.serverTimestamp() // NOVO: Campo para controlar notificações lidas
         });
       })
       .catch(e => showError(authError, e.message));
@@ -1237,6 +1321,9 @@ const firebaseConfig = {
       loadUsersToFollow();
       loadFollowingUsersBar(); // Carrega a barra de usuários seguidos
       startFeedListener();
+      // Não chame loadNotifications() aqui, pois ele será chamado ao abrir o popup
+      // Em vez disso, configure um listener para o campo lastNotificationCheck
+      setupNotificationListener(); // NOVO: Configura o listener para notificações
     } else {
       currentUser = null;
       viewedStories = {}; // Limpa os stories visualizados ao deslogar
@@ -1253,6 +1340,8 @@ const firebaseConfig = {
       usersListDiv.innerHTML = '';
       followingBar.innerHTML = ''; // Limpa a barra de seguidos
       profilePostsFeed.innerHTML = ''; // Limpa os posts do perfil
+      notificationCountSpan.classList.add('hidden'); // Esconde a contagem ao deslogar
+      notificationCountSpan.textContent = ''; // Limpa o texto da contagem
     }
   });
 
@@ -1500,38 +1589,32 @@ const firebaseConfig = {
       const currentUserRef = db.collection('users').doc(currentUser.uid);
       const userToFollowRef = db.collection('users').doc(userId);
 
+      // Verifica se o usuário atual já segue o usuário alvo
       const currentUserDoc = await currentUserRef.get();
-      const userToFollowDoc = await userToFollowRef.get();
-
-      if (!currentUserDoc.exists || !userToFollowDoc.exists) {
-        alert('Usuário não encontrado');
-        btn.disabled = false;
-        return;
-      }
-
       const currentUserData = currentUserDoc.data();
-      const userToFollowData = userToFollowDoc.data();
+      const isFollowing = (currentUserData.following || []).includes(userId);
 
-      let following = currentUserData.following || [];
-      let followers = userToFollowData.followers || [];
-
-      if (following.includes(userId)) {
+      if (isFollowing) {
         // Desseguir
-        following = following.filter(id => id !== userId);
-        followers = followers.filter(id => id !== currentUser.uid);
+        await currentUserRef.update({
+          following: firebase.firestore.FieldValue.arrayRemove(userId)
+        });
+        await userToFollowRef.update({
+          followers: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+        });
         btn.textContent = 'Seguir';
         btn.classList.remove('following');
       } else {
         // Seguir
-        following.push(userId);
-        followers.push(currentUser.uid);
+        await currentUserRef.update({
+          following: firebase.firestore.FieldValue.arrayUnion(userId)
+        });
+        await userToFollowRef.update({
+          followers: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+        });
         btn.textContent = 'Seguindo';
         btn.classList.add('following');
       }
-
-      // Atualizar no banco de dados
-      await currentUserRef.update({ following });
-      await userToFollowRef.update({ followers });
 
       // Recarregar a lista de sugestões e a barra de seguidos
       loadUsersToFollow();
@@ -2477,7 +2560,6 @@ const firebaseConfig = {
     if (e.target === storyViewerPopup) {
       storyViewerPopup.classList.add('hidden');
       // Novo: Recarrega a barra de seguidos para atualizar o estado da borda
-      loadFollowingUsersBar();
     }
   });
 
@@ -2598,6 +2680,271 @@ const firebaseConfig = {
       }
     }
   });
+
+  // =================================================================================
+  // NOVO: FUNCIONALIDADES DE NOTIFICAÇÕES
+  // =================================================================================
+
+  // Event listener para abrir o popup de notificações
+  bottomNavNotificationsBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    notificationsPopup.classList.remove('hidden');
+    await loadNotifications(); // Carrega as notificações ao abrir o popup
+    // NOVO: Marca o timestamp da última vez que o usuário verificou as notificações
+    if (currentUser) {
+        await db.collection('users').doc(currentUser.uid).update({
+            lastNotificationCheck: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        // Após marcar como lido, esconde a contagem imediatamente
+        notificationCountSpan.classList.add('hidden');
+        notificationCountSpan.textContent = '';
+    }
+  });
+
+  // Event listener para fechar o popup de notificações
+  notificationsCloseBtn.addEventListener('click', () => {
+    notificationsPopup.classList.add('hidden');
+  });
+
+  notificationsPopup.addEventListener('click', (e) => {
+    if (e.target === notificationsPopup) {
+      notificationsPopup.classList.add('hidden');
+    }
+  });
+
+  // NOVO: Variável para armazenar o timestamp da última verificação de notificações
+  let lastNotificationCheckTimestamp = null;
+
+  // NOVO: Função para configurar um listener em tempo real para o campo lastNotificationCheck
+  function setupNotificationListener() {
+    if (!currentUser) return;
+
+    db.collection('users').doc(currentUser.uid)
+      .onSnapshot(async (doc) => {
+        if (doc.exists) {
+          const userData = doc.data();
+          lastNotificationCheckTimestamp = userData.lastNotificationCheck;
+          // Recarrega as notificações para atualizar a contagem
+          await updateNotificationCount();
+        }
+      }, (error) => {
+        console.error("Erro ao ouvir o documento do usuário para notificações:", error);
+      });
+  }
+
+  // NOVO: Função para atualizar apenas a contagem de notificações não lidas
+  async function updateNotificationCount() {
+    if (!currentUser) {
+      notificationCountSpan.classList.add('hidden');
+      notificationCountSpan.textContent = '';
+      return;
+    }
+
+    let unreadCount = 0;
+    const myNotifications = [];
+
+    try {
+      // 1. Buscar posts do usuário logado
+      const myPostsSnapshot = await db.collection('posts')
+        .where('userId', '==', currentUser.uid)
+        .orderBy('createdAt', 'desc')
+        .get();
+
+      myPostsSnapshot.forEach(postDoc => {
+        const post = { id: postDoc.id, ...postDoc.data() };
+
+        // Notificações de Curtidas
+        (post.likes || []).forEach(likerId => {
+          if (likerId !== currentUser.uid) {
+            const notificationTime = new Date(post.createdAt.seconds * 1000);
+            if (!lastNotificationCheckTimestamp || notificationTime > lastNotificationCheckTimestamp.toDate()) {
+              unreadCount++;
+            }
+          }
+        });
+
+        // Notificações de Comentários
+        (post.comments || []).forEach(comment => {
+          if (comment.userId !== currentUser.uid) {
+            const notificationTime = comment.createdAt instanceof firebase.firestore.Timestamp ? comment.createdAt.toDate() : comment.createdAt;
+            if (!lastNotificationCheckTimestamp || notificationTime > lastNotificationCheckTimestamp.toDate()) {
+              unreadCount++;
+            }
+          }
+        });
+      });
+
+      // 2. Buscar stories do usuário logado para notificações de likes/comments
+      const userDoc = await db.collection('users').doc(currentUser.uid).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        const myStories = userData.stories || [];
+
+        myStories.forEach(story => {
+          // Notificações de Curtidas em Stories
+          (story.likes || []).forEach(likerId => {
+            if (likerId !== currentUser.uid) {
+              const notificationTime = story.createdAt instanceof firebase.firestore.Timestamp ? story.createdAt.toDate() : story.createdAt;
+              if (!lastNotificationCheckTimestamp || notificationTime > lastNotificationCheckTimestamp.toDate()) {
+                unreadCount++;
+              }
+            }
+          });
+
+          // Notificações de Comentários em Stories
+          (story.comments || []).forEach(comment => {
+            if (comment.userId !== currentUser.uid) {
+              const notificationTime = comment.createdAt instanceof firebase.firestore.Timestamp ? comment.createdAt.toDate() : comment.createdAt;
+              if (!lastNotificationCheckTimestamp || notificationTime > lastNotificationCheckTimestamp.toDate()) {
+                unreadCount++;
+              }
+            }
+          });
+        });
+      }
+
+      if (unreadCount > 0) {
+        notificationCountSpan.textContent = unreadCount;
+        notificationCountSpan.classList.remove('hidden');
+      } else {
+        notificationCountSpan.classList.add('hidden');
+      }
+
+    } catch (e) {
+      console.error("Erro ao atualizar contagem de notificações:", e);
+      notificationCountSpan.classList.add('hidden');
+    }
+  }
+
+
+  // Função para carregar e exibir as notificações completas no popup
+  async function loadNotifications() {
+    notificationsList.innerHTML = ''; // Limpa a lista atual
+    noNotificationsText.classList.add('hidden'); // Esconde a mensagem de "nenhuma notificação"
+    // A contagem será atualizada pelo listener, então não a manipulamos diretamente aqui
+
+    if (!currentUser) {
+      notificationsList.innerHTML = '<li>Faça login para ver suas notificações.</li>';
+      return;
+    }
+
+    const myNotifications = [];
+
+    try {
+      // 1. Buscar posts do usuário logado
+      const myPostsSnapshot = await db.collection('posts')
+        .where('userId', '==', currentUser.uid)
+        .orderBy('createdAt', 'desc')
+        .get();
+
+      myPostsSnapshot.forEach(postDoc => {
+        const post = { id: postDoc.id, ...postDoc.data() };
+
+        // Notificações de Curtidas
+        (post.likes || []).forEach(likerId => {
+          if (likerId !== currentUser.uid) { // Não notificar sobre suas próprias curtidas
+            myNotifications.push({
+              type: 'like',
+              userId: likerId,
+              postId: post.id,
+              postText: post.text ? post.text.substring(0, 50) + '...' : 'seu post',
+              createdAt: new Date(post.createdAt.seconds * 1000) // Usar a data do post como referência para curtidas
+            });
+          }
+        });
+
+        // Notificações de Comentários
+        (post.comments || []).forEach(comment => {
+          if (comment.userId !== currentUser.uid) { // Não notificar sobre seus próprios comentários
+            myNotifications.push({
+              type: 'comment',
+              userId: comment.userId,
+              postId: post.id,
+              postText: post.text ? post.text.substring(0, 50) + '...' : 'seu post',
+              commentText: comment.text,
+              createdAt: comment.createdAt instanceof firebase.firestore.Timestamp ? comment.createdAt.toDate() : comment.createdAt
+            });
+          }
+        });
+      });
+
+      // 2. Buscar stories do usuário logado para notificações de likes/comments
+      const userDoc = await db.collection('users').doc(currentUser.uid).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        const myStories = userData.stories || [];
+
+        myStories.forEach(story => {
+          // Notificações de Curtidas em Stories
+          (story.likes || []).forEach(likerId => {
+            if (likerId !== currentUser.uid) {
+              myNotifications.push({
+                type: 'story_like',
+                userId: likerId,
+                storyId: story.id,
+                storyMedia: story.mediaType === 'image' ? 'sua imagem' : 'seu vídeo',
+                createdAt: story.createdAt instanceof firebase.firestore.Timestamp ? story.createdAt.toDate() : story.createdAt
+              });
+            }
+          });
+
+          // Notificações de Comentários em Stories
+          (story.comments || []).forEach(comment => {
+            if (comment.userId !== currentUser.uid) {
+              myNotifications.push({
+                type: 'story_comment',
+                userId: comment.userId,
+                storyId: story.id,
+                storyMedia: story.mediaType === 'image' ? 'sua imagem' : 'seu vídeo',
+                commentText: comment.text,
+                createdAt: comment.createdAt instanceof firebase.firestore.Timestamp ? comment.createdAt.toDate() : comment.createdAt
+              });
+            }
+          });
+        });
+      }
+
+
+      // Ordenar notificações pela data mais recente
+      myNotifications.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+      // Renderizar notificações
+      if (myNotifications.length === 0) {
+        noNotificationsText.classList.remove('hidden');
+      } else {
+        // Buscar nomes de usuário para exibir
+        const userIds = new Set(myNotifications.map(n => n.userId));
+        const usersMap = new Map();
+        for (const userId of userIds) {
+          const userDoc = await db.collection('users').doc(userId).get();
+          if (userDoc.exists) {
+            usersMap.set(userId, userDoc.data().email.split('@')[0]);
+          }
+        }
+
+        myNotifications.forEach(notification => {
+          const li = document.createElement('li');
+          const username = usersMap.get(notification.userId) || 'Usuário Desconhecido';
+          const formattedDate = formatPostDate(notification.createdAt);
+
+          if (notification.type === 'like') {
+            li.innerHTML = `<strong>${username}</strong> curtiu ${notification.postText}. <span class="notification-date">${formattedDate}</span>`;
+          } else if (notification.type === 'comment') {
+            li.innerHTML = `<strong>${username}</strong> comentou "${notification.commentText}" em ${notification.postText}. <span class="notification-date">${formattedDate}</span>`;
+          } else if (notification.type === 'story_like') {
+            li.innerHTML = `<strong>${username}</strong> curtiu ${notification.storyMedia} no seu story. <span class="notification-date">${formattedDate}</span>`;
+          } else if (notification.type === 'story_comment') {
+            li.innerHTML = `<strong>${username}</strong> comentou "${notification.commentText}" em ${notification.storyMedia} no seu story. <span class="notification-date">${formattedDate}</span>`;
+          }
+          notificationsList.appendChild(li);
+        });
+      }
+
+    } catch (e) {
+      console.error("Erro ao carregar notificações:", e);
+      notificationsList.innerHTML = '<li>Erro ao carregar notificações.</li>';
+    }
+  }
 
 </script>
 </body>
