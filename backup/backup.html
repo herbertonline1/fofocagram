@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>FofocaGram- Rede Social</title>
+<title>FofocaGram - Rede Social</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <!-- Font Awesome para ícones -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -139,14 +139,7 @@
     text-decoration: none;
     color: #262626;
     font-size: 0.8rem;
-  }
-  .following-user-item img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #c7c7c7;
-    padding: 2px;
+    cursor: pointer; /* Adicionado para indicar clicável */
   }
   .following-user-item span {
     margin-top: 0.4rem;
@@ -155,6 +148,59 @@
     text-overflow: ellipsis;
     max-width: 70px;
   }
+
+  /* NOVOS ESTILOS PARA BORDAS DE STORY */
+  .story-circle {
+    position: relative;
+    width: 66px; /* Tamanho do círculo externo */
+    height: 66px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Evita que o item encolha */
+  }
+
+  /* Borda degradê para stories não visualizados */
+  .story-circle.has-story {
+    background-image: linear-gradient(to top right, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+    padding: 3px; /* Espessura da borda */
+  }
+
+  /* Círculo interno branco para criar o efeito de anel */
+  .story-circle.has-story .inner-circle {
+    background-color: #fff; /* Fundo branco para o anel */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Ocupa o espaço do pai (story-circle) menos o padding */
+    height: 100%;
+  }
+
+  /* Borda cinza para stories já visualizados ou sem stories ativos */
+  .story-circle.story-viewed {
+    border: 2px solid #dbdbdb; /* Borda cinza clara */
+    padding: 0; /* Sem padding extra para a borda */
+  }
+  .story-circle.story-viewed .inner-circle {
+    background-color: transparent; /* Não precisa de fundo branco */
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .following-user-item img {
+    width: 60px; /* Tamanho da imagem de perfil */
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  /* FIM DOS NOVOS ESTILOS PARA BORDAS DE STORY */
+
 
   /* Rightbar */
   .rightbar {
@@ -251,6 +297,11 @@
     width: 100%;
     display: block;
     object-fit: cover;
+  }
+  .post-video, .post-tiktok-video { /* Adicionado .post-tiktok-video */
+    width: 100%;
+    height: 315px; /* Altura padrão para vídeos do YouTube e TikTok */
+    display: block;
   }
   .post-content {
     padding: 0 1rem 1rem 1rem;
@@ -430,10 +481,10 @@
     min-height: 80px;
     resize: vertical;
   }
-  #post-image-input {
+  #post-image-input, #post-media-url { /* Adicionado #post-media-url */
     padding: 0.5rem;
     background-color: transparent;
-    border: none;
+    border: 1px solid #dbdbdb; /* Adicionado borda para o input de URL */
     margin-bottom: 0.5rem;
   }
   #post-image-input::-webkit-file-upload-button {
@@ -506,6 +557,220 @@
     color: #262626;
   }
 
+  /* Seção de Perfil */
+  #profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    max-width: 500px; /* Limita a largura para mobile */
+    margin: 2rem auto; /* Centraliza */
+  }
+  #profile-section h2 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: #262626;
+  }
+  #profile-section p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: #262626;
+  }
+  #profile-section button {
+    background: none;
+    border: none;
+    color: #0095f6;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    width: auto; /* Para que o botão não ocupe 100% da largura */
+    margin: 0.5rem 0;
+    text-align: center;
+  }
+  #profile-section button:hover {
+    text-decoration: underline;
+  }
+  #profile-section #logout-btn-profile {
+    color: #ed4956;
+    font-weight: 600;
+    margin-top: 1.5rem;
+  }
+  #profile-section #logout-btn-profile:hover {
+    color: #cc3745;
+  }
+  /* Adicionado para a imagem de perfil */
+  #profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 3px solid #0095f6;
+    padding: 3px;
+  }
+  #profile-picture-url-input {
+    margin-bottom: 1rem;
+  }
+
+
+  /* Estilos para a seção de publicações do perfil */
+  #profile-posts-section {
+    width: 100%;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dbdbdb;
+  }
+  #profile-posts-section h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    color: #262626;
+  }
+  #profile-posts-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* Popup de Stories */
+  #story-viewer-popup {
+    background: #000; /* Fundo preto para stories */
+    color: #fff;
+  }
+  #story-viewer-popup .popup-content {
+    background: #000;
+    padding: 0;
+    max-width: 400px; /* Largura ideal para stories */
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #story-viewer-popup .close-popup-btn {
+    color: #fff;
+    z-index: 1;
+  }
+  #story-viewer-content {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #story-viewer-image, #story-viewer-video { /* Adicionado #story-viewer-video */
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Garante que a imagem/vídeo se ajuste sem cortar */
+  }
+  #story-viewer-video {
+    width: 100%;
+    height: auto; /* Ajusta a altura automaticamente */
+  }
+  #story-viewer-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  #story-viewer-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  #story-viewer-info span {
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+  #story-viewer-info .story-date {
+    font-size: 0.75rem;
+    color: #bbb;
+    margin-left: auto;
+  }
+  #story-viewer-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 5px;
+  }
+  #story-viewer-controls button {
+    background: rgba(0,0,0,0.3);
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #story-viewer-controls button:hover {
+    background: rgba(0,0,0,0.5);
+  }
+  #story-viewer-actions {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  #story-viewer-actions .comment-form {
+    border-top: none;
+    padding-top: 0;
+  }
+  #story-viewer-actions .comment-form input {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+  #story-viewer-actions .comment-form input::placeholder {
+    color: #ccc;
+  }
+  #story-viewer-actions .comment-form button {
+    background: #0095f6;
+  }
+  #story-viewer-actions .post-actions button {
+    color: #fff;
+  }
+  #story-viewer-actions .post-actions button.liked {
+    color: #ed4956;
+  }
+  #story-viewer-actions .post-likes-count {
+    color: #fff;
+  }
+  #story-viewer-comments-list {
+    max-height: 100px; /* Altura máxima para a lista de comentários */
+    overflow-y: auto;
+    margin-bottom: 0.5rem;
+    padding-right: 5px; /* Para a barra de rolagem */
+  }
+  #story-viewer-comments-list .comment {
+    color: #fff;
+  }
+  #story-viewer-comments-list .comment-user {
+    color: #fff;
+  }
+  #story-viewer-comments-list .comment-actions button {
+    color: #bbb;
+  }
+
+
   /* Responsividade */
   @media (max-width: 992px) {
     .app-container {
@@ -527,6 +792,10 @@
     }
     header {
       padding: 0.5rem 1rem;
+    }
+    /* Esconde os controles do header em mobile */
+    .header-user-controls {
+      display: none;
     }
     #auth-section {
       margin: 1rem;
@@ -564,6 +833,20 @@
     .bottom-nav a:hover {
       color: #0095f6;
     }
+    /* Garante que a seção de perfil seja visível em mobile quando ativada */
+    #profile-section.hidden-mobile {
+        display: none !important;
+    }
+    #profile-section:not(.hidden-mobile) {
+        display: flex; /* Ou block, dependendo do layout desejado */
+    }
+  }
+
+  /* Esconde a seção de perfil por padrão em desktop */
+  @media (min-width: 993px) {
+    #profile-section {
+        display: none !important;
+    }
   }
 </style>
 </head>
@@ -571,9 +854,9 @@
 
 <header>
   <h1>FofocaGram</h1>
-  <div class="header-user-controls hidden" id="header-user-controls">
-    <span id="user-email"></span>
-    <button id="logout-btn">Sair</button>
+  <div class="header-user-controls" id="header-user-controls-desktop">
+    <span id="user-email-desktop"></span>
+    <button id="logout-btn-desktop">Sair</button>
   </div>
 </header>
 
@@ -592,16 +875,17 @@
   <div class="app-container hidden" id="app-section">
     <!-- Sidebar (visível apenas em telas maiores) -->
     <nav class="sidebar">
-      <a href="#"><i class="fas fa-home"></i> Página Inicial</a>
+      <a href="#" id="sidebar-home"><i class="fas fa-home"></i> Página Inicial</a>
       <a href="#"><i class="fas fa-compass"></i> Explorar</a>
       <a href="#"><i class="fas fa-video"></i> Reels</a>
       <a href="#"><i class="fas fa-heart"></i> Notificações</a>
       <a href="#" id="menu-criar"><i class="fas fa-plus-square"></i> Criar</a>
-      <a href="#"><i class="fas fa-user-circle"></i> Perfil</a>
+      <a href="#" id="sidebar-profile"><i class="fas fa-user-circle"></i> Perfil</a>
+      <a href="#" id="menu-criar-story"><i class="fas fa-camera"></i> Criar Story</a>
     </nav>
 
     <!-- Coluna central -->
-    <div class="main-feed">
+    <div class="main-feed" id="main-feed-content">
       <!-- Barra de usuários que sigo -->
       <div class="following-bar" id="following-bar">
         <!-- JS vai preencher com usuários que você segue -->
@@ -622,6 +906,28 @@
       </section>
     </aside>
   </div>
+
+  <!-- Seção de Perfil (inicialmente oculta) -->
+  <section id="profile-section" class="hidden">
+    <h2>Perfil</h2>
+    <img id="profile-picture" src="https://via.placeholder.com/120" alt="Foto de Perfil">
+    <p id="profile-user-email"></p>
+    <input type="url" id="profile-picture-url-input" placeholder="URL da foto de perfil">
+    <button id="update-profile-picture-btn">Atualizar Foto de Perfil</button>
+    <button id="edit-profile-btn">Editar Perfil</button>
+    <button id="my-posts-btn">Minhas Publicações</button>
+    <button id="logout-btn-profile">Sair</button>
+
+    <!-- Nova seção para as publicações do usuário -->
+    <div id="profile-posts-section">
+      <h3>Minhas Publicações</h3>
+      <div id="profile-posts-feed">
+        <!-- As publicações do usuário serão carregadas aqui -->
+      </div>
+      <p id="profile-posts-loading" class="hidden">Carregando suas publicações...</p>
+    </div>
+  </section>
+
 </main>
 
 <!-- Popup para Nova Publicação -->
@@ -631,20 +937,70 @@
     <section id="post-section">
       <h2>Nova Publicação</h2>
       <textarea id="post-text" rows="3" placeholder="Escreva uma legenda..."></textarea>
-      <input type="file" id="post-image-input" accept="image/*" />
+      <input type="url" id="post-media-url" placeholder="Cole o link de uma imagem, vídeo do YouTube ou TikTok" />
       <button id="post-btn">Publicar</button>
       <p id="post-error" style="color:red;"></p>
     </section>
   </div>
 </div>
 
+<!-- Popup para Criar Story -->
+<div class="popup-overlay hidden" id="story-creator-popup">
+  <div class="popup-content">
+    <button class="close-popup-btn" aria-label="Fechar popup">×</button>
+    <section id="story-creator-section">
+      <h2>Criar Novo Story</h2>
+      <input type="url" id="story-media-url" placeholder="Cole o link de uma imagem ou vídeo do TikTok para o story" />
+      <button id="create-story-btn">Publicar Story</button>
+      <p id="story-creator-error" style="color:red;"></p>
+    </section>
+  </div>
+</div>
+
+<!-- Popup para Visualizar Stories -->
+<div class="popup-overlay hidden" id="story-viewer-popup">
+  <div class="popup-content">
+    <button class="close-popup-btn" aria-label="Fechar popup">×</button>
+    <div id="story-viewer-content">
+      <!-- A mídia do story será carregada aqui (imagem ou vídeo) -->
+      <img id="story-viewer-image" src="" alt="Story" class="hidden">
+      <iframe id="story-viewer-video" src="" frameborder="0" allowfullscreen class="hidden"></iframe>
+
+      <div id="story-viewer-info">
+        <img id="story-viewer-user-pic" src="" alt="User Pic">
+        <span id="story-viewer-username"></span>
+        <span class="story-date" id="story-viewer-date"></span>
+      </div>
+      <div id="story-viewer-controls">
+        <button id="prev-story-btn"><i class="fas fa-chevron-left"></i></button>
+        <button id="next-story-btn"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+    <div id="story-viewer-actions">
+      <div class="post-actions">
+        <button id="story-like-btn"><i class="far fa-heart"></i></button>
+      </div>
+      <span class="post-likes-count" id="story-likes-count">0 curtidas</span>
+      <div id="story-viewer-comments-list">
+        <!-- Comentários do story serão carregados aqui -->
+      </div>
+      <div class="comment-form">
+        <input type="text" id="story-comment-input" placeholder="Adicione um comentário..." />
+        <button id="story-comment-btn">Publicar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Menu de navegação inferior para mobile -->
 <nav class="bottom-nav hidden" id="bottom-navigation">
-  <a href="#"><i class="fas fa-home"></i></a>
+  <a href="#" id="bottom-nav-home"><i class="fas fa-home"></i></a>
   <a href="#"><i class="fas fa-compass"></i></a>
   <a href="#" id="bottom-menu-criar"><i class="fas fa-plus-square"></i></a>
+  <a href="#" id="bottom-menu-criar-story"><i class="fas fa-camera"></i></a>
   <a href="#"><i class="fas fa-heart"></i></a>
-  <a href="#"><i class="fas fa-user-circle"></i></a>
+  <a href="#" id="bottom-nav-profile"><i class="fas fa-user-circle"></i></a>
 </nav>
 
 <!-- Firebase SDKs -->
@@ -680,12 +1036,14 @@ const firebaseConfig = {
   const loginBtn = document.getElementById('login-btn');
   const signupBtn = document.getElementById('signup-btn');
   const authError = document.getElementById('auth-error');
-  const userEmailSpan = document.getElementById('user-email');
-  const logoutBtn = document.getElementById('logout-btn');
-  const headerUserControls = document.getElementById('header-user-controls');
+  
+  // Elementos do Header (Desktop)
+  const userEmailSpanDesktop = document.getElementById('user-email-desktop');
+  const logoutBtnDesktop = document.getElementById('logout-btn-desktop');
+  const headerUserControlsDesktop = document.getElementById('header-user-controls-desktop');
 
   const postText = document.getElementById('post-text');
-  const postImageInput = document.getElementById('post-image-input');
+  const postMediaUrlInput = document.getElementById('post-media-url'); // Input para URL de mídia
   const postBtn = document.getElementById('post-btn');
   const postError = document.getElementById('post-error');
 
@@ -702,9 +1060,60 @@ const firebaseConfig = {
   const postSectionPopup = document.getElementById('post-section-popup'); // O popup em si
   const closePopupBtn = postSectionPopup.querySelector('.close-popup-btn'); // Botão "X" para fechar o popup
 
+  // Elementos da Seção de Perfil
+  const profileSection = document.getElementById('profile-section');
+  const profilePicture = document.getElementById('profile-picture'); // Novo elemento
+  const profilePictureUrlInput = document.getElementById('profile-picture-url-input'); // Novo elemento
+  const updateProfilePictureBtn = document.getElementById('update-profile-picture-btn'); // Novo elemento
+  const profileUserEmail = document.getElementById('profile-user-email');
+  const editProfileBtn = document.getElementById('edit-profile-btn');
+  const myPostsBtn = document.getElementById('my-posts-btn');
+  const logoutBtnProfile = document.getElementById('logout-btn-profile');
+  const profilePostsFeed = document.getElementById('profile-posts-feed'); // Novo elemento
+  const profilePostsLoading = document.getElementById('profile-posts-loading'); // Novo elemento
+
+  // Elementos de Navegação
+  const sidebarProfileLink = document.getElementById('sidebar-profile');
+  const bottomNavProfileLink = document.getElementById('bottom-nav-profile');
+  const sidebarHomeLink = document.getElementById('sidebar-home');
+  const bottomNavHomeLink = document.getElementById('bottom-nav-home');
+  const mainFeedContent = document.getElementById('main-feed-content');
+
+  // Elementos do Story Creator Popup
+  const menuCriarStoryBtn = document.getElementById('menu-criar-story');
+  const bottomMenuCriarStoryBtn = document.getElementById('bottom-menu-criar-story');
+  const storyCreatorPopup = document.getElementById('story-creator-popup');
+  const storyCreatorCloseBtn = storyCreatorPopup.querySelector('.close-popup-btn');
+  const storyMediaUrlInput = document.getElementById('story-media-url');
+  const createStoryBtn = document.getElementById('create-story-btn');
+  const storyCreatorError = document.getElementById('story-creator-error');
+
+  // Elementos do Story Viewer Popup
+  const storyViewerPopup = document.getElementById('story-viewer-popup');
+  const storyViewerCloseBtn = storyViewerPopup.querySelector('.close-popup-btn');
+  const storyViewerImage = document.getElementById('story-viewer-image');
+  const storyViewerVideo = document.getElementById('story-viewer-video'); // Novo elemento para vídeo
+  const storyViewerUsername = document.getElementById('story-viewer-username');
+  const storyViewerUserPic = document.getElementById('story-viewer-user-pic');
+  const storyViewerDate = document.getElementById('story-viewer-date');
+  const prevStoryBtn = document.getElementById('prev-story-btn');
+  const nextStoryBtn = document.getElementById('next-story-btn');
+  const storyLikeBtn = document.getElementById('story-like-btn');
+  const storyLikesCount = document.getElementById('story-likes-count');
+  const storyCommentInput = document.getElementById('story-comment-input');
+  const storyCommentBtn = document.getElementById('story-comment-btn');
+  const storyViewerCommentsList = document.getElementById('story-viewer-comments-list');
+
 
   let currentUser = null;
   let unsubscribeFeed = null;
+  let unsubscribeProfilePosts = null; // Novo listener para posts do perfil
+  let currentStories = []; // Armazena os stories do usuário atualmente visualizado
+  let currentStoryIndex = 0; // Índice do story atual no visualizador
+  let currentStoryUserId = null; // ID do usuário cujos stories estão sendo visualizados
+
+  // Novo: Armazena os IDs dos stories que o usuário atual já visualizou
+  let viewedStories = {}; // Estrutura: { userId: [storyId1, storyId2], ... }
 
   // Função para mostrar erro temporariamente
   function showError(element, message) {
@@ -712,6 +1121,35 @@ const firebaseConfig = {
     setTimeout(() => {
       element.textContent = '';
     }, 4000);
+  }
+
+  // Função para alternar a visibilidade das seções principais
+  function showSection(sectionToShow) {
+    const sections = [appSection, profileSection]; // Adicione outras seções principais aqui se houver
+    sections.forEach(section => {
+      if (section === sectionToShow) {
+        section.classList.remove('hidden');
+        // Adiciona uma classe para esconder em mobile se for a seção de perfil
+        if (section === profileSection) {
+            profileSection.classList.remove('hidden-mobile');
+            // Se a seção de perfil está sendo mostrada, carrega as publicações do usuário
+            if (currentUser) {
+                loadProfileData(currentUser.uid); // Carrega dados do perfil, incluindo a foto
+                loadProfilePosts(currentUser.uid);
+            }
+        }
+      } else {
+        section.classList.add('hidden');
+        if (section === profileSection) {
+            profileSection.classList.add('hidden-mobile');
+            // Se a seção de perfil está sendo escondida, para de ouvir as publicações
+            if (unsubscribeProfilePosts) {
+                unsubscribeProfilePosts();
+                unsubscribeProfilePosts = null;
+            }
+        }
+      }
+    });
   }
 
   // Login
@@ -729,7 +1167,7 @@ const firebaseConfig = {
   // Cadastro
   signupBtn.addEventListener('click', () => {
     const email = emailInput.value.trim();
-    const password = passwordInput.value;
+    const password = password.value;
     if (!email || !password) {
       showError(authError, 'Preencha email e senha');
       return;
@@ -741,40 +1179,63 @@ const firebaseConfig = {
           email: email,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           followers: [],
-          following: []
+          following: [],
+          profilePictureUrl: '', // Adiciona um campo vazio para a URL da foto de perfil
+          stories: [], // Novo campo para armazenar stories
+          viewedStories: {} // Novo campo para armazenar stories visualizados
         });
       })
       .catch(e => showError(authError, e.message));
   });
 
-  // Logout
-  logoutBtn.addEventListener('click', () => {
+  // Logout (botão do desktop)
+  logoutBtnDesktop.addEventListener('click', () => {
+    auth.signOut();
+  });
+
+  // Logout (botão do perfil)
+  logoutBtnProfile.addEventListener('click', () => {
     auth.signOut();
   });
 
   // Atualiza UI após login/logout
-  auth.onAuthStateChanged(user => {
+  auth.onAuthStateChanged(async user => { // Adicionado 'async' aqui
     if (user) {
       currentUser = user;
-      userEmailSpan.textContent = user.email.split('@')[0]; // Exibe apenas o nome de usuário
+      userEmailSpanDesktop.textContent = user.email.split('@')[0]; // Exibe apenas o nome de usuário no desktop header
+      profileUserEmail.textContent = user.email; // Exibe o email completo na seção de perfil
       authSection.classList.add('hidden');
-      appSection.classList.remove('hidden');
-      headerUserControls.classList.remove('hidden'); // Mostra os controles do usuário no header
-      bottomNavigation.classList.remove('hidden'); // Mostra o menu inferior
+      
+      // Carrega os stories visualizados do usuário logado
+      const userDoc = await db.collection('users').doc(currentUser.uid).get();
+      if (userDoc.exists) {
+        viewedStories = userDoc.data().viewedStories || {};
+      }
+
+      // Mostra a seção principal do app por padrão
+      showSection(appSection); 
+
+      headerUserControlsDesktop.classList.remove('hidden'); // Mostra os controles do usuário no header (desktop)
+      bottomNavigation.classList.remove('hidden'); // Mostra o menu inferior (mobile)
       loadUsersToFollow();
       loadFollowingUsersBar(); // Carrega a barra de usuários seguidos
       startFeedListener();
     } else {
       currentUser = null;
-      userEmailSpan.textContent = '';
+      viewedStories = {}; // Limpa os stories visualizados ao deslogar
+      userEmailSpanDesktop.textContent = '';
+      profileUserEmail.textContent = '';
       authSection.classList.remove('hidden');
       appSection.classList.add('hidden');
-      headerUserControls.classList.add('hidden'); // Esconde os controles do usuário no header
-      bottomNavigation.classList.add('hidden'); // Esconde o menu inferior
+      profileSection.classList.add('hidden'); // Esconde a seção de perfil
+      headerUserControlsDesktop.classList.add('hidden'); // Esconde os controles do usuário no header (desktop)
+      bottomNavigation.classList.add('hidden'); // Esconde o menu inferior (mobile)
       if (unsubscribeFeed) unsubscribeFeed(); // Para de ouvir o feed
+      if (unsubscribeProfilePosts) unsubscribeProfilePosts(); // Para de ouvir os posts do perfil
       feedDiv.innerHTML = '';
       usersListDiv.innerHTML = '';
       followingBar.innerHTML = ''; // Limpa a barra de seguidos
+      profilePostsFeed.innerHTML = ''; // Limpa os posts do perfil
     }
   });
 
@@ -782,10 +1243,10 @@ const firebaseConfig = {
   postBtn.addEventListener('click', async () => {
     postError.textContent = '';
     const text = postText.value.trim();
-    const file = postImageInput.files[0];
+    const mediaUrl = postMediaUrlInput.value.trim();
 
-    if (!text && !file) {
-      showError(postError, 'Escreva algo ou selecione uma imagem');
+    if (!text && !mediaUrl) {
+      showError(postError, 'Escreva algo ou cole um link de mídia.');
       return;
     }
 
@@ -793,13 +1254,37 @@ const firebaseConfig = {
     postBtn.textContent = 'Publicando...';
 
     try {
-      let imageUrl = null;
-      if (file) {
-        // Upload imagem para o Firebase Storage
-        const storageRef = storage.ref();
-        const imageRef = storageRef.child(`posts/${currentUser.uid}/${Date.now()}_${file.name}`);
-        const snapshot = await imageRef.put(file);
-        imageUrl = await snapshot.ref.getDownloadURL();
+      let finalMediaUrl = null;
+      let mediaType = null; // 'image', 'youtube', 'tiktok', ou null
+
+      if (mediaUrl) {
+        // Processar URL de mídia
+        if (mediaUrl.includes('youtube.com/watch?v=') || mediaUrl.includes('youtu.be/')) {
+          // É um vídeo do YouTube
+          finalMediaUrl = mediaUrl;
+          mediaType = 'youtube';
+        } else if (mediaUrl.includes('tiktok.com/')) {
+          // É um vídeo do TikTok
+          finalMediaUrl = getTikTokEmbedUrl(mediaUrl);
+          if (finalMediaUrl) {
+            mediaType = 'tiktok';
+          } else {
+            showError(postError, 'URL do TikTok inválida ou não suportada para incorporação.');
+            postBtn.disabled = false;
+            postBtn.textContent = 'Publicar';
+            return;
+          }
+        }
+        else if (/\.(jpeg|jpg|gif|png|webp|bmp)$/i.test(mediaUrl)) {
+          // É uma imagem (verifica a extensão)
+          finalMediaUrl = mediaUrl;
+          mediaType = 'image';
+        } else {
+          showError(postError, 'URL de mídia inválida. Suporta apenas imagens diretas, links do YouTube ou TikTok.');
+          postBtn.disabled = false;
+          postBtn.textContent = 'Publicar';
+          return;
+        }
       }
 
       // Criar post no Firestore
@@ -807,14 +1292,15 @@ const firebaseConfig = {
         userId: currentUser.uid,
         userEmail: currentUser.email,
         text: text,
-        imageUrl: imageUrl,
+        imageUrl: finalMediaUrl, // Usamos imageUrl para armazenar a URL da mídia, seja imagem ou vídeo
+        mediaType: mediaType, // Tipo de mídia (image, youtube, tiktok)
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         likes: [],
         comments: []
       });
 
       postText.value = ''; // Limpa o campo de texto
-      postImageInput.value = ''; // Limpa o input de arquivo
+      postMediaUrlInput.value = ''; // Limpa o input de URL de mídia
       postSectionPopup.classList.add('hidden'); // Fecha o popup após a publicação
     } catch (e) {
       showError(postError, 'Erro ao publicar: ' + e.message);
@@ -876,7 +1362,7 @@ const firebaseConfig = {
     }
   }
 
-  // Carregar usuários que o usuário atual segue para a barra superior
+  // Carregar usuários que o usuário atual segue para a barra superior (incluindo stories)
   async function loadFollowingUsersBar() {
     followingBar.innerHTML = ''; // Limpa a barra antes de preencher
     try {
@@ -884,9 +1370,57 @@ const firebaseConfig = {
       const currentUserData = currentUserDoc.data();
       const followingIds = currentUserData.following || [];
 
+      // Adiciona o próprio usuário no início da barra de stories
+      const selfUserDoc = await db.collection('users').doc(currentUser.uid).get();
+      if (selfUserDoc.exists) {
+        const selfUserData = selfUserDoc.data();
+        const selfDiv = document.createElement('div');
+        selfDiv.classList.add('following-user-item');
+        selfDiv.dataset.userId = currentUser.uid; // Adiciona o ID do usuário
+        selfDiv.addEventListener('click', () => viewStories(currentUser.uid));
+
+        // Estrutura para a borda do story
+        const selfStoryCircle = document.createElement('div');
+        selfStoryCircle.classList.add('story-circle');
+        const selfInnerCircle = document.createElement('div');
+        selfInnerCircle.classList.add('inner-circle');
+
+        const selfImg = document.createElement('img');
+        selfImg.src = selfUserData.profilePictureUrl || 'https://via.placeholder.com/60';
+        selfImg.alt = selfUserData.email.split('@')[0];
+        
+        // Verifica se o próprio usuário tem stories ativos
+        const selfStories = selfUserData.stories || [];
+        const activeSelfStories = selfStories.filter(s => {
+            const createdAtDate = s.createdAt instanceof firebase.firestore.Timestamp ? s.createdAt.toDate() : s.createdAt;
+            return (new Date().getTime() - createdAtDate.getTime()) < (24 * 60 * 60 * 1000);
+        });
+
+        // Novo: Verifica se todos os stories ativos do próprio usuário foram visualizados
+        const allSelfStoriesViewed = activeSelfStories.every(s => (viewedStories[currentUser.uid] || []).includes(s.id));
+
+        if (activeSelfStories.length > 0 && !allSelfStoriesViewed) {
+          selfStoryCircle.classList.add('has-story');
+        } else {
+          selfStoryCircle.classList.add('story-viewed'); // Borda cinza se não tem story novo ou todos foram vistos
+        }
+
+        selfInnerCircle.appendChild(selfImg);
+        selfStoryCircle.appendChild(selfInnerCircle);
+        selfDiv.appendChild(selfStoryCircle);
+
+        const selfSpan = document.createElement('span');
+        selfSpan.textContent = 'Seu Story'; // Texto para o próprio story
+        selfDiv.appendChild(selfSpan);
+        followingBar.appendChild(selfDiv);
+      }
+
+
       if (followingIds.length === 0) {
-        followingBar.textContent = 'Você ainda não segue ninguém.';
-        followingBar.style.justifyContent = 'center'; // Centraliza o texto
+        if (followingBar.children.length === 0) { // Se não houver nem o próprio story
+            followingBar.textContent = 'Você ainda não segue ninguém e não tem stories.';
+            followingBar.style.justifyContent = 'center'; // Centraliza o texto
+        }
         return;
       }
       followingBar.style.justifyContent = 'flex-start'; // Volta ao padrão
@@ -898,13 +1432,41 @@ const firebaseConfig = {
           const userData = userDoc.data();
           const div = document.createElement('div');
           div.classList.add('following-user-item');
-          // Adicionar imagem de perfil (se houver, caso contrário, um placeholder)
+          div.dataset.userId = userId; // Adiciona o ID do usuário
+          div.addEventListener('click', () => viewStories(userId));
+
+          // Estrutura para a borda do story
+          const storyCircle = document.createElement('div');
+          storyCircle.classList.add('story-circle');
+          const innerCircle = document.createElement('div');
+          innerCircle.classList.add('inner-circle');
+
           const img = document.createElement('img');
           img.src = userData.profilePictureUrl || 'https://via.placeholder.com/60'; // Placeholder
           img.alt = userData.email.split('@')[0];
+          
+          // Verifica se o usuário seguido tem stories ativos (últimas 24h)
+          const userStories = userData.stories || [];
+          const activeUserStories = userStories.filter(s => {
+            const createdAtDate = s.createdAt instanceof firebase.firestore.Timestamp ? s.createdAt.toDate() : s.createdAt;
+            return (new Date().getTime() - createdAtDate.getTime()) < (24 * 60 * 60 * 1000);
+          });
+
+          // Novo: Verifica se todos os stories ativos deste usuário foram visualizados
+          const allUserStoriesViewed = activeUserStories.every(s => (viewedStories[userId] || []).includes(s.id));
+
+          if (activeUserStories.length > 0 && !allUserStoriesViewed) {
+            storyCircle.classList.add('has-story');
+          } else {
+            storyCircle.classList.add('story-viewed'); // Borda cinza se não tem story novo ou todos foram vistos
+          }
+
+          innerCircle.appendChild(img);
+          storyCircle.appendChild(innerCircle);
+          div.appendChild(storyCircle);
+
           const span = document.createElement('span');
           span.textContent = userData.email.split('@')[0];
-          div.appendChild(img);
           div.appendChild(span);
           followingBar.appendChild(div);
         }
@@ -968,7 +1530,7 @@ const firebaseConfig = {
     btn.disabled = false;
   }
 
-  // Iniciar listener do feed
+  // Iniciar listener do feed principal
   async function startFeedListener() {
     feedDiv.innerHTML = '';
     loadingText.classList.remove('hidden');
@@ -1013,6 +1575,71 @@ const firebaseConfig = {
       });
   }
 
+  // Função para carregar as publicações do usuário logado na seção de perfil
+  async function loadProfilePosts(userId) {
+    profilePostsFeed.innerHTML = '';
+    profilePostsLoading.classList.remove('hidden');
+
+    if (unsubscribeProfilePosts) {
+        unsubscribeProfilePosts(); // Cancela o listener anterior, se houver
+    }
+
+    unsubscribeProfilePosts = db.collection('posts')
+      .where('userId', '==', userId)
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(snapshot => {
+        profilePostsFeed.innerHTML = '';
+        if (snapshot.empty) {
+          profilePostsFeed.textContent = 'Você ainda não fez nenhuma publicação.';
+          profilePostsLoading.classList.add('hidden');
+          return;
+        }
+        snapshot.forEach(doc => {
+          const post = { id: doc.id, ...doc.data() };
+          profilePostsFeed.appendChild(createPostElement(post)); // Reutiliza a função createPostElement
+        });
+        profilePostsLoading.classList.add('hidden');
+      }, err => {
+        profilePostsFeed.textContent = 'Erro ao carregar suas publicações: ' + err.message;
+        profilePostsLoading.classList.add('hidden');
+      });
+  }
+
+  // Função para carregar os dados do perfil do usuário
+  async function loadProfileData(userId) {
+    try {
+      const userDoc = await db.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        profileUserEmail.textContent = userData.email;
+        profilePicture.src = userData.profilePictureUrl || 'https://via.placeholder.com/120'; // Define a imagem de perfil ou um placeholder
+        profilePictureUrlInput.value = userData.profilePictureUrl || ''; // Preenche o input com a URL atual
+      }
+    } catch (e) {
+      console.error("Erro ao carregar dados do perfil:", e);
+    }
+  }
+
+  // Event listener para atualizar a foto de perfil
+  updateProfilePictureBtn.addEventListener('click', async () => {
+    const newProfilePictureUrl = profilePictureUrlInput.value.trim();
+    if (newProfilePictureUrl) {
+      try {
+        await db.collection('users').doc(currentUser.uid).update({
+          profilePictureUrl: newProfilePictureUrl
+        });
+        profilePicture.src = newProfilePictureUrl; // Atualiza a imagem exibida
+        alert('Foto de perfil atualizada com sucesso!');
+        loadFollowingUsersBar(); // Recarrega a barra de seguidos para atualizar a imagem lá também
+      } catch (e) {
+        alert('Erro ao atualizar foto de perfil: ' + e.message);
+      }
+    } else {
+      alert('Por favor, insira uma URL válida para a foto de perfil.');
+    }
+  });
+
+
   // Criar elemento de post
   function createPostElement(post) {
     const div = document.createElement('div');
@@ -1049,7 +1676,7 @@ const firebaseConfig = {
       const deletePostBtn = document.createElement('button');
       deletePostBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
       deletePostBtn.title = 'Excluir Post';
-      deletePostBtn.addEventListener('click', () => deletePost(post.id, post.imageUrl));
+      deletePostBtn.addEventListener('click', () => deletePost(post.id, post.imageUrl)); // Passa imageUrl para exclusão do Storage
       ownerActionsDiv.appendChild(deletePostBtn);
 
       header.appendChild(ownerActionsDiv);
@@ -1057,14 +1684,43 @@ const firebaseConfig = {
 
     div.appendChild(header);
 
-    // Imagem
-    if (post.imageUrl) {
+    // Mídia (Imagem, YouTube ou TikTok)
+    if (post.mediaType === 'image' && post.imageUrl) {
       const img = document.createElement('img');
       img.classList.add('post-image');
       img.src = post.imageUrl;
       img.alt = 'Imagem publicada pelo usuário';
       div.appendChild(img);
+    } else if (post.mediaType === 'youtube' && post.imageUrl) {
+      const youtubeId = getYouTubeVideoId(post.imageUrl);
+      if (youtubeId) {
+        const iframe = document.createElement('iframe');
+        iframe.classList.add('post-video');
+        iframe.src = `https://www.youtube.com/embed/${youtubeId}`;
+        iframe.frameBorder = '0';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        div.appendChild(iframe);
+      }
+    } else if (post.mediaType === 'tiktok' && post.imageUrl) {
+        const iframe = document.createElement('iframe');
+        iframe.classList.add('post-tiktok-video');
+        iframe.src = post.imageUrl; // A URL já deve ser a de embed
+        iframe.frameBorder = '0';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.setAttribute('scrolling', 'no'); // TikTok embeds often need this
+        div.appendChild(iframe);
     }
+    else if (post.imageUrl && !post.mediaType) { // Compatibilidade com posts antigos que só tinham imageUrl
+        // Se não tem mediaType mas tem imageUrl, assume que é imagem para compatibilidade
+        const img = document.createElement('img');
+        img.classList.add('post-image');
+        img.src = post.imageUrl;
+        img.alt = 'Imagem publicada pelo usuário';
+        div.appendChild(img);
+    }
+
 
     // Conteúdo do post (texto, ações, likes, comentários)
     const contentDiv = document.createElement('div');
@@ -1116,6 +1772,26 @@ const firebaseConfig = {
     return div;
   }
 
+  // Função para extrair o ID do vídeo do YouTube de uma URL
+  function getYouTubeVideoId(url) {
+    let videoId = null;
+    const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regex);
+    if (match && match[1]) {
+      videoId = match[1];
+    }
+    return videoId;
+  }
+
+  // Função para extrair o URL de embed do TikTok
+  function getTikTokEmbedUrl(url) {
+    const match = url.match(/tiktok\.com\/@[\w.]+\/video\/(\d+)/);
+    if (match && match[1]) {
+      return `https://www.tiktok.com/embed/v2/${match[1]}?autoplay=1&loop=0`;
+    }
+    return null;
+  }
+
   // Função para formatar a data do post
   function formatPostDate(date) {
     const now = new Date();
@@ -1136,28 +1812,64 @@ const firebaseConfig = {
   }
 
   // Lógica de curtir/descurtir
-  async function toggleLike(post, btn) {
+  async function toggleLike(post, btn, isStory = false) {
     try {
-      const postRef = db.collection('posts').doc(post.id);
-      const postDoc = await postRef.get();
-      if (!postDoc.exists) return;
+      let docRef;
+      let currentLikes;
 
-      const postData = postDoc.data();
-      let likes = postData.likes || [];
-      const liked = likes.includes(currentUser.uid);
+      if (isStory) {
+        // Para stories, o "post" é um objeto de story dentro do array 'stories' do usuário
+        // Precisamos atualizar o story específico dentro do array
+        docRef = db.collection('users').doc(post.userId);
+        const userDoc = await docRef.get();
+        if (!userDoc.exists) return;
 
-      if (liked) {
-        likes = likes.filter(id => id !== currentUser.uid);
+        const userData = userDoc.data();
+        let stories = userData.stories || [];
+        const storyIndex = stories.findIndex(s => s.id === post.id); // Encontra o story pelo ID
+        if (storyIndex === -1) return;
+
+        currentLikes = stories[storyIndex].likes || [];
+        const liked = currentLikes.includes(currentUser.uid);
+
+        if (liked) {
+          currentLikes = currentLikes.filter(id => id !== currentUser.uid);
+        } else {
+          currentLikes.push(currentUser.uid);
+        }
+        stories[storyIndex].likes = currentLikes;
+        await docRef.update({ stories: stories });
+
+        // Atualiza a UI do story viewer
+        if (btn) {
+            btn.innerHTML = currentLikes.includes(currentUser.uid) ? `<i class="fas fa-heart"></i>` : `<i class="far fa-heart"></i>`;
+            if (currentLikes.includes(currentUser.uid)) btn.classList.add('liked');
+            else btn.classList.remove('liked');
+        }
+        storyLikesCount.textContent = `${currentLikes.length} curtidas`;
+
       } else {
-        likes.push(currentUser.uid);
+        // Lógica para posts normais
+        docRef = db.collection('posts').doc(post.id);
+        const postDoc = await docRef.get();
+        if (!postDoc.exists) return;
+
+        const postData = postDoc.data();
+        currentLikes = postData.likes || [];
+        const liked = currentLikes.includes(currentUser.uid);
+
+        if (liked) {
+          currentLikes = currentLikes.filter(id => id !== currentUser.uid);
+        } else {
+          currentLikes.push(currentUser.uid);
+        }
+
+        await docRef.update({ likes: currentLikes });
       }
 
-      // Atualizar likes no Firestore
-      await postRef.update({ likes });
-
-      // A UI será atualizada automaticamente pelo onSnapshot do feed
+      // A UI do feed principal será atualizada automaticamente pelo onSnapshot
     } catch (e) {
-      alert('Erro ao curtir publicação: ' + e.message);
+      alert('Erro ao curtir: ' + e.message);
     }
   }
 
@@ -1180,12 +1892,14 @@ const firebaseConfig = {
   async function deletePost(postId, imageUrl) {
     if (confirm('Tem certeza que deseja excluir esta publicação?')) {
       try {
-        // Excluir imagem do Storage, se existir
-        if (imageUrl) {
+        // Excluir imagem do Storage, se existir e for um upload direto (não URL externa)
+        // Verificamos se a URL começa com o bucket do Firebase Storage para evitar tentar deletar URLs externas
+        const storageBucketPrefix = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/posts`;
+        if (imageUrl && imageUrl.startsWith(storageBucketPrefix)) {
           const imageRef = storage.refFromURL(imageUrl);
           await imageRef.delete().catch(error => {
             // Ignorar erro se o arquivo não existir (já foi excluído ou URL inválida)
-            console.warn('Erro ao excluir imagem do Storage (pode não existir):', error);
+            console.warn('Erro ao excluir imagem do Storage (pode não existir ou não ser do Storage):', error);
           });
         }
         // Excluir post do Firestore
@@ -1197,7 +1911,7 @@ const firebaseConfig = {
     }
   }
 
-  // Toggle comentários
+  // Toggle comentários (para posts normais)
   function toggleCommentsSection(postDiv, post) {
     let commentsSection = postDiv.querySelector('#comments-section');
     let commentsContainer;
@@ -1243,13 +1957,13 @@ const firebaseConfig = {
             const editCommentBtn = document.createElement('button');
             editCommentBtn.innerHTML = '<i class="fas fa-edit"></i>';
             editCommentBtn.title = 'Editar Comentário';
-            editCommentBtn.addEventListener('click', () => editComment(post.id, index, comment.text));
+            editCommentBtn.addEventListener('click', () => editComment(post.id, index, comment.text, false));
             commentActionsDiv.appendChild(editCommentBtn);
 
             const deleteCommentBtn = document.createElement('button');
             deleteCommentBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
             deleteCommentBtn.title = 'Excluir Comentário';
-            deleteCommentBtn.addEventListener('click', () => deleteComment(post.id, index));
+            deleteCommentBtn.addEventListener('click', () => deleteComment(post.id, index, false));
             commentActionsDiv.appendChild(deleteCommentBtn);
 
             commentDiv.appendChild(commentActionsDiv);
@@ -1323,20 +2037,41 @@ const firebaseConfig = {
     postDiv.querySelector('.post-content').appendChild(commentsSection); // Adiciona a seção de comentários dentro do post-content
   }
 
-  // Função para editar um comentário
-  async function editComment(postId, commentIndex, currentText) {
+  // Função para editar um comentário (adaptada para posts e stories)
+  async function editComment(parentId, commentIndex, currentText, isStory = false) {
     const newText = prompt('Edite seu comentário:', currentText);
     if (newText !== null && newText.trim() !== '') {
       try {
-        const postRef = db.collection('posts').doc(postId);
-        const postDoc = await postRef.get();
-        if (!postDoc.exists) return;
+        let docRef;
+        let commentsArray;
 
-        const comments = postDoc.data().comments || [];
-        if (commentIndex >= 0 && commentIndex < comments.length) {
-          comments[commentIndex].text = newText.trim();
-          await postRef.update({ comments: comments });
-          // O listener do feed (onSnapshot) irá atualizar a UI automaticamente
+        if (isStory) {
+          docRef = db.collection('users').doc(currentStoryUserId); // ParentId é o userId do story
+          const userDoc = await docRef.get();
+          if (!userDoc.exists) return;
+          let stories = userDoc.data().stories || [];
+          const story = stories.find(s => s.id === parentId); // Encontra o story pelo ID
+          if (!story) return;
+          commentsArray = story.comments || [];
+
+          if (commentIndex >= 0 && commentIndex < commentsArray.length) {
+            commentsArray[commentIndex].text = newText.trim();
+            // Atualiza o story no array de stories do usuário
+            await docRef.update({ stories: stories });
+            renderStoryComments(commentsArray); // Atualiza a UI do story viewer
+          }
+
+        } else {
+          docRef = db.collection('posts').doc(parentId); // ParentId é o postId
+          const postDoc = await docRef.get();
+          if (!postDoc.exists) return;
+          commentsArray = postDoc.data().comments || [];
+
+          if (commentIndex >= 0 && commentIndex < commentsArray.length) {
+            commentsArray[commentIndex].text = newText.trim();
+            await docRef.update({ comments: commentsArray });
+            // O listener do feed (onSnapshot) irá atualizar a UI automaticamente
+          }
         }
       } catch (e) {
         alert('Erro ao editar comentário: ' + e.message);
@@ -1344,19 +2079,40 @@ const firebaseConfig = {
     }
   }
 
-  // Função para excluir um comentário
-  async function deleteComment(postId, commentIndex) {
+  // Função para excluir um comentário (adaptada para posts e stories)
+  async function deleteComment(parentId, commentIndex, isStory = false) {
     if (confirm('Tem certeza que deseja excluir este comentário?')) {
       try {
-        const postRef = db.collection('posts').doc(postId);
-        const postDoc = await postRef.get();
-        if (!postDoc.exists) return;
+        let docRef;
+        let commentsArray;
 
-        let comments = postDoc.data().comments || [];
-        if (commentIndex >= 0 && commentIndex < comments.length) {
-          comments.splice(commentIndex, 1); // Remove o comentário pelo índice
-          await postRef.update({ comments: comments });
-          // O listener do feed (onSnapshot) irá atualizar a UI automaticamente
+        if (isStory) {
+          docRef = db.collection('users').doc(currentStoryUserId); // ParentId é o userId do story
+          const userDoc = await docRef.get();
+          if (!userDoc.exists) return;
+          let stories = userDoc.data().stories || [];
+          const story = stories.find(s => s.id === parentId); // Encontra o story pelo ID
+          if (!story) return;
+          commentsArray = story.comments || [];
+
+          if (commentIndex >= 0 && commentIndex < commentsArray.length) {
+            commentsArray.splice(commentIndex, 1); // Remove o comentário pelo índice
+            // Atualiza o story no array de stories do usuário
+            await docRef.update({ stories: stories });
+            renderStoryComments(commentsArray); // Atualiza a UI do story viewer
+          }
+
+        } else {
+          docRef = db.collection('posts').doc(parentId); // ParentId é o postId
+          const postDoc = await docRef.get();
+          if (!postDoc.exists) return;
+          commentsArray = postDoc.data().comments || [];
+
+          if (commentIndex >= 0 && commentIndex < commentsArray.length) {
+            commentsArray.splice(commentIndex, 1); // Remove o comentário pelo índice
+            await docRef.update({ comments: commentsArray });
+            // O listener do feed (onSnapshot) irá atualizar a UI automaticamente
+          }
         }
       } catch (e) {
         alert('Erro ao excluir comentário: ' + e.message);
@@ -1386,6 +2142,396 @@ const firebaseConfig = {
       postSectionPopup.classList.add('hidden');
     }
   });
+
+  // Event listeners para navegação (Perfil e Home)
+  sidebarProfileLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(profileSection);
+  });
+
+  bottomNavProfileLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(profileSection);
+  });
+
+  sidebarHomeLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(appSection);
+  });
+
+  bottomNavHomeLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(appSection);
+  });
+
+  // Placeholder para botões do perfil
+  editProfileBtn.addEventListener('click', () => {
+    alert('Funcionalidade "Editar Perfil" em desenvolvimento!');
+  });
+
+  // O botão "Minhas Publicações" agora apenas rola para a seção de posts no perfil
+  myPostsBtn.addEventListener('click', () => {
+    const profilePostsSection = document.getElementById('profile-posts-section');
+    if (profilePostsSection) {
+      profilePostsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  // =================================================================================
+  // NOVAS FUNCIONALIDADES DE STORIES
+  // =================================================================================
+
+  // Abrir popup de criar story
+  menuCriarStoryBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    storyCreatorPopup.classList.remove('hidden');
+  });
+
+  bottomMenuCriarStoryBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    storyCreatorPopup.classList.remove('hidden');
+  });
+
+  // Fechar popup de criar story
+  storyCreatorCloseBtn.addEventListener('click', () => {
+    storyCreatorPopup.classList.add('hidden');
+    storyMediaUrlInput.value = '';
+    storyCreatorError.textContent = '';
+  });
+
+  storyCreatorPopup.addEventListener('click', (e) => {
+    if (e.target === storyCreatorPopup) {
+      storyCreatorPopup.classList.add('hidden');
+      storyMediaUrlInput.value = '';
+      storyCreatorError.textContent = '';
+    }
+  });
+
+  // Publicar Story
+  createStoryBtn.addEventListener('click', async () => {
+    storyCreatorError.textContent = '';
+    const mediaUrl = storyMediaUrlInput.value.trim();
+
+    if (!mediaUrl) {
+      showError(storyCreatorError, 'Por favor, cole o link de uma imagem ou vídeo do TikTok para o story.');
+      return;
+    }
+
+    let finalMediaUrl = null;
+    let mediaType = null; // 'image', 'tiktok'
+
+    // Validação de URL de imagem ou TikTok
+    if (/\.(jpeg|jpg|gif|png|webp|bmp)$/i.test(mediaUrl)) {
+      finalMediaUrl = mediaUrl;
+      mediaType = 'image';
+    } else if (mediaUrl.includes('tiktok.com/')) {
+      finalMediaUrl = getTikTokEmbedUrl(mediaUrl);
+      if (finalMediaUrl) {
+        mediaType = 'tiktok';
+      } else {
+        showError(storyCreatorError, 'URL do TikTok inválida ou não suportada para incorporação.');
+        return;
+      }
+    } else {
+      showError(storyCreatorError, 'URL inválida. Suporta apenas imagens diretas ou links de vídeo do TikTok.');
+      return;
+    }
+
+    createStoryBtn.disabled = true;
+    createStoryBtn.textContent = 'Publicando...';
+
+    try {
+      const userRef = db.collection('users').doc(currentUser.uid);
+      const userDoc = await userRef.get();
+      const userData = userDoc.data();
+      const currentStories = userData.stories || [];
+
+      // Adiciona um ID único para o story
+      const newStory = {
+        id: db.collection('users').doc().id, // Gera um ID único para o story
+        mediaUrl: finalMediaUrl, // Usamos mediaUrl para armazenar a URL da mídia
+        mediaType: mediaType, // Tipo de mídia (image, tiktok)
+        createdAt: new Date(), // CORREÇÃO: Use new Date() em vez de FieldValue.serverTimestamp()
+        likes: [],
+        comments: []
+      };
+
+      // Adiciona o novo story ao array de stories do usuário
+      await userRef.update({
+        stories: firebase.firestore.FieldValue.arrayUnion(newStory)
+      });
+
+      // Novo: Marca o próprio story como não visualizado para que a borda apareça
+      if (viewedStories[currentUser.uid]) {
+        viewedStories[currentUser.uid] = viewedStories[currentUser.uid].filter(id => id !== newStory.id);
+      } else {
+        viewedStories[currentUser.uid] = [];
+      }
+      await db.collection('users').doc(currentUser.uid).update({
+        viewedStories: viewedStories
+      });
+
+
+      storyMediaUrlInput.value = '';
+      storyCreatorPopup.classList.add('hidden');
+      alert('Story publicado com sucesso!');
+      loadFollowingUsersBar(); // Atualiza a barra de stories
+    } catch (e) {
+      showError(storyCreatorError, 'Erro ao publicar story: ' + e.message);
+    }
+
+    createStoryBtn.disabled = false;
+    createStoryBtn.textContent = 'Publicar Story';
+  });
+
+  // Visualizar Stories
+  async function viewStories(userId) {
+    currentStoryUserId = userId; // Armazena o ID do usuário cujos stories estão sendo vistos
+    try {
+      const userDoc = await db.collection('users').doc(userId).get();
+      if (!userDoc.exists) {
+        alert('Usuário não encontrado.');
+        return;
+      }
+      const userData = userDoc.data();
+      const userStories = userData.stories || [];
+
+      // Filtra stories ativos (últimas 24h) e ordena por data
+      currentStories = userStories
+        .filter(s => {
+          // Garante que s.createdAt é um Timestamp antes de chamar toDate()
+          const createdAtDate = s.createdAt instanceof firebase.firestore.Timestamp ? s.createdAt.toDate() : s.createdAt;
+          return (new Date().getTime() - createdAtDate.getTime()) < (24 * 60 * 60 * 1000);
+        })
+        .sort((a, b) => {
+          const dateA = a.createdAt instanceof firebase.firestore.Timestamp ? a.createdAt.toDate() : a.createdAt;
+          const dateB = b.createdAt instanceof firebase.firestore.Timestamp ? b.createdAt.toDate() : b.createdAt;
+          return dateA.getTime() - dateB.getTime();
+        });
+
+      if (currentStories.length === 0) {
+        alert('Este usuário não tem stories ativos no momento.');
+        return;
+      }
+
+      // Preenche informações do usuário no viewer
+      storyViewerUsername.textContent = userData.email.split('@')[0];
+      storyViewerUserPic.src = userData.profilePictureUrl || 'https://via.placeholder.com/30';
+
+      currentStoryIndex = 0;
+      renderStory(currentStories[currentStoryIndex]);
+      storyViewerPopup.classList.remove('hidden');
+
+      // Novo: Marca o primeiro story como visualizado ao abrir o viewer
+      markStoryAsViewed(currentStoryUserId, currentStories[currentStoryIndex].id);
+
+    } catch (e) {
+      alert('Erro ao carregar stories: ' + e.message);
+      console.error(e);
+    }
+  }
+
+  // Renderiza um story específico no visualizador
+  function renderStory(story) {
+    // Esconde ambos os elementos de mídia primeiro
+    storyViewerImage.classList.add('hidden');
+    storyViewerVideo.classList.add('hidden');
+    storyViewerImage.src = '';
+    storyViewerVideo.src = '';
+
+    if (story.mediaType === 'image') {
+      storyViewerImage.src = story.mediaUrl;
+      storyViewerImage.classList.remove('hidden');
+    } else if (story.mediaType === 'tiktok') {
+      storyViewerVideo.src = story.mediaUrl;
+      storyViewerVideo.classList.remove('hidden');
+    } else {
+      // Fallback para stories antigos ou sem mediaType definido (assumir imagem)
+      storyViewerImage.src = story.mediaUrl || story.imageUrl; // Compatibilidade com 'imageUrl' antigo
+      storyViewerImage.classList.remove('hidden');
+    }
+
+    // Garante que story.createdAt é um objeto Date antes de formatar
+    const createdAtDate = story.createdAt instanceof firebase.firestore.Timestamp ? story.createdAt.toDate() : story.createdAt;
+    storyViewerDate.textContent = formatPostDate(createdAtDate);
+
+    // Atualiza o estado do botão de like
+    const liked = story.likes.includes(currentUser.uid);
+    storyLikeBtn.innerHTML = liked ? `<i class="fas fa-heart"></i>` : `<i class="far fa-heart"></i>`;
+    if (liked) storyLikeBtn.classList.add('liked');
+    else storyLikeBtn.classList.remove('liked');
+    storyLikesCount.textContent = `${story.likes.length} curtidas`;
+
+    // Renderiza os comentários do story
+    renderStoryComments(story.comments || []);
+
+    // Habilita/desabilita botões de navegação
+    prevStoryBtn.disabled = currentStoryIndex === 0;
+    nextStoryBtn.disabled = currentStoryIndex === currentStories.length - 1;
+  }
+
+  // Renderiza a lista de comentários para um story
+  function renderStoryComments(comments) {
+    storyViewerCommentsList.innerHTML = '';
+    if (comments && comments.length > 0) {
+      comments.forEach((comment, index) => {
+        const commentDiv = document.createElement('div');
+        commentDiv.classList.add('comment');
+        
+        const textContainer = document.createElement('div');
+        textContainer.classList.add('comment-text-container');
+        const userSpan = document.createElement('span');
+        userSpan.classList.add('comment-user');
+        userSpan.textContent = comment.userEmail.split('@')[0] + ' ';
+        const textSpan = document.createElement('span');
+        textSpan.textContent = comment.text;
+        textContainer.appendChild(userSpan);
+        textContainer.appendChild(textSpan);
+        commentDiv.appendChild(textContainer);
+
+        // Botões de Editar/Excluir Comentário (apenas para o autor)
+        if (currentUser && comment.userId === currentUser.uid) {
+          const commentActionsDiv = document.createElement('div');
+          commentActionsDiv.classList.add('comment-actions');
+
+          const editCommentBtn = document.createElement('button');
+          editCommentBtn.innerHTML = '<i class="fas fa-edit"></i>';
+          editCommentBtn.title = 'Editar Comentário';
+          editCommentBtn.addEventListener('click', () => editComment(currentStories[currentStoryIndex].id, index, comment.text, true));
+          commentActionsDiv.appendChild(editCommentBtn);
+
+          const deleteCommentBtn = document.createElement('button');
+          deleteCommentBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+          deleteCommentBtn.title = 'Excluir Comentário';
+          deleteCommentBtn.addEventListener('click', () => deleteComment(currentStories[currentStoryIndex].id, index, true));
+          commentActionsDiv.appendChild(deleteCommentBtn);
+
+          commentDiv.appendChild(commentActionsDiv);
+        }
+        storyViewerCommentsList.appendChild(commentDiv);
+      });
+    } else {
+      storyViewerCommentsList.textContent = 'Nenhum comentário ainda.';
+      storyViewerCommentsList.style.fontSize = '0.85rem';
+      storyViewerCommentsList.style.color = '#8e8e8e';
+    }
+  }
+
+
+  // Navegação de Stories
+  prevStoryBtn.addEventListener('click', () => {
+    if (currentStoryIndex > 0) {
+      currentStoryIndex--;
+      renderStory(currentStories[currentStoryIndex]);
+      // Novo: Marca o story anterior como visualizado
+      markStoryAsViewed(currentStoryUserId, currentStories[currentStoryIndex].id);
+    }
+  });
+
+  nextStoryBtn.addEventListener('click', () => {
+    if (currentStoryIndex < currentStories.length - 1) {
+      currentStoryIndex++;
+      renderStory(currentStories[currentStoryIndex]);
+      // Novo: Marca o próximo story como visualizado
+      markStoryAsViewed(currentStoryUserId, currentStories[currentStoryIndex].id);
+    } else {
+      // Se for o último story, fecha o visualizador
+      storyViewerPopup.classList.add('hidden');
+      // Novo: Recarrega a barra de seguidos para atualizar o estado da borda
+      loadFollowingUsersBar();
+    }
+  });
+
+  // Fechar popup de visualização de story
+  storyViewerCloseBtn.addEventListener('click', () => {
+    storyViewerPopup.classList.add('hidden');
+    // Novo: Recarrega a barra de seguidos para atualizar o estado da borda
+    loadFollowingUsersBar();
+  });
+
+  storyViewerPopup.addEventListener('click', (e) => {
+    if (e.target === storyViewerPopup) {
+      storyViewerPopup.classList.add('hidden');
+      // Novo: Recarrega a barra de seguidos para atualizar o estado da borda
+      loadFollowingUsersBar();
+    }
+  });
+
+  // Curtir Story
+  storyLikeBtn.addEventListener('click', () => {
+    if (currentStories.length > 0) {
+      toggleLike({
+        id: currentStories[currentStoryIndex].id,
+        userId: currentStoryUserId // Passa o userId do dono do story
+      }, storyLikeBtn, true); // isStory = true
+    }
+  });
+
+  // Comentar Story
+  storyCommentBtn.addEventListener('click', async () => {
+    const text = storyCommentInput.value.trim();
+    if (!text || currentStories.length === 0) return;
+
+    try {
+      const userRef = db.collection('users').doc(currentStoryUserId);
+      const userDoc = await userRef.get();
+      if (!userDoc.exists) return;
+
+      let stories = userDoc.data().stories || [];
+      const storyIndex = stories.findIndex(s => s.id === currentStories[currentStoryIndex].id);
+      if (storyIndex === -1) return;
+
+      const newComment = {
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        text: text,
+        createdAt: new Date()
+      };
+
+      // Adiciona o comentário ao story específico
+      if (!stories[storyIndex].comments) {
+        stories[storyIndex].comments = [];
+      }
+      stories[storyIndex].comments.push(newComment);
+
+      await userRef.update({ stories: stories });
+
+      storyCommentInput.value = ''; // Limpa o input
+
+      // Atualiza a UI do story viewer com o novo comentário
+      renderStoryComments(stories[storyIndex].comments);
+
+    } catch (e) {
+      alert('Erro ao comentar no story: ' + e.message);
+    }
+  });
+
+  // NOVO: Função para marcar um story como visualizado
+  async function markStoryAsViewed(storyOwnerId, storyId) {
+    if (!currentUser || !storyOwnerId || !storyId) return;
+
+    // Se o story for do próprio usuário, não marca como visualizado para ele mesmo
+    if (storyOwnerId === currentUser.uid) {
+        return;
+    }
+
+    if (!viewedStories[storyOwnerId]) {
+      viewedStories[storyOwnerId] = [];
+    }
+
+    if (!viewedStories[storyOwnerId].includes(storyId)) {
+      viewedStories[storyOwnerId].push(storyId);
+      try {
+        await db.collection('users').doc(currentUser.uid).update({
+          [`viewedStories.${storyOwnerId}`]: firebase.firestore.FieldValue.arrayUnion(storyId)
+        });
+        // Não recarrega a barra aqui para evitar piscar durante a navegação dos stories
+        // A barra será recarregada ao fechar o viewer
+      } catch (e) {
+        console.error("Erro ao marcar story como visualizado:", e);
+      }
+    }
+  }
 
 </script>
 </body>
