@@ -1255,7 +1255,7 @@ const firebaseConfig = {
   // Login
   loginBtn.addEventListener('click', () => {
     const email = emailInput.value.trim();
-    const password = password.value;
+    const password = passwordInput.value; // Corrigido para usar passwordInput.value
     if (!email || !password) {
       showError(authError, 'Preencha email e senha');
       return;
